@@ -41,7 +41,7 @@ class Beeminder_Autoloader
         // Load file if it exists
         $fileName = dirname(__FILE__) . '/../' . str_replace('_', '/', $className) . '.php';
         if (file_exists($fileName)) {
-            require $fileName;
+            require_once $fileName;
             return true;
         }
 
