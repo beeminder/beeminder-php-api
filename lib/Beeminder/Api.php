@@ -62,4 +62,25 @@ abstract class Beeminder_Api
         return $this->_client->post($path, $parameters, $requestOptions);
     }
     
+    
+    // ----------------------------------------------------------------------
+    // -- Object result helpers
+    // ----------------------------------------------------------------------
+    
+    protected static function _objectify($values)
+    {
+        
+        // Only work with valid arrays
+        if (!$values || !is_array($values)) { 
+            return $values;
+        }
+        
+        // Convert each array in the array to an object
+        array_walk($values, function(&$value) {
+            $value = (object)$value;
+        });
+        
+        return $values;
+    }
+    
 }
