@@ -11,7 +11,7 @@ Usage
 First you'll need to include the autoloader using the following snippet:
 
 ```php
-require_once '/path/to/lib/Beeminder/Autoloader.class.php';
+require_once '/path/to/lib/Beeminder/Autoloader.php';
 Beeminder_Autoloader::register();
 ```
 
@@ -25,7 +25,7 @@ want. Here's an example:
 ```php
 
 // Include the autoloader
-require_once dirname(__FILE__) . '/vendor/beeminder-api/lib/Beeminder/Autoloader.class.php';
+require_once dirname(__FILE__) . '/vendor/beeminder-api/lib/Beeminder/Autoloader.php';
 Beeminder_Autoloader::register();
 
 // Create new client
