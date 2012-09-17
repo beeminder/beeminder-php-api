@@ -73,14 +73,19 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
             // Encode args
             $query = utf8_encode(http_build_query($parameters, '', '&'));
             
-            // Append for GET, set as POST variables otherwise
-            if ('GET' === $method) {
-                $curlOptions[CURLOPT_URL] = "{$url}?{$query}";
-            } else {
-                $curlOptions += array(
-                    CURLOPT_POST       => true,
-                    CURLOPT_POSTFIELDS => $query
-                );
+            // Add payload data
+            switch ($method) {
+                
+                case 'GET':
+                    $curlOptions[CURLOPT_URL] = "{$url}?{$query}";
+                    break;
+                    
+                case 'POST':
+                    $curlOptions += array(
+                        CURLOPT_POST       => true,
+                        CURLOPT_POSTFIELDS => $query
+                    );
+                    break;
             }
             
         }
