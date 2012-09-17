@@ -113,6 +113,15 @@ class Beeminder_Client
     }
     
     /**
+     * Get the Datapoint resource API.
+     * @return Beeminder_Api_Datapoint API object for querying Datapoint objects.
+     */
+    public function getDatapointApi()
+    {
+        return $this->_getApi('Datapoint');
+    }
+    
+    /**
      * Helper method for fetching resource API objects. Checks if a class to
      * handle the request exists. If it does, will return an instance of
      * it. Also caches objects for performace.
