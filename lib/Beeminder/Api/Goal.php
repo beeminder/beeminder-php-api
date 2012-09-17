@@ -35,7 +35,7 @@ class Beeminder_Api_Goal extends Beeminder_Api
         // Fetch goals
         $goals = $this->get("users/:username/goals");
         
-        // Conver to array of objects
+        // Convert to array of objects
         array_walk($goals, function(&$goal) {
             $goal = (object)$goal;
         });
