@@ -1,0 +1,16 @@
+#+TITLE: Beeminder API - TODO
+
+* Resources
+** Goal
+*** TODO Add support for creating goals
+*** TODO Add support for updating the Yellow Brick Road
+** User
+*** TODO Get user information
+** Data Point
+*** TODO Add data point
+*** TODO Add multiple data points
+*** TODO Retrieve data points
+*** TODO Delete a data point
+*** TODO Update a data point
+* Client
+** TODO Add support for PEAR HTTP_Request2 Library

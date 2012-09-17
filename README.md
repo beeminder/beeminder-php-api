@@ -34,8 +34,8 @@ $api = new Beeminder_Client();
 // Setup auth (private token)
 $api->login('username', 'secret_token', Beeminder_Client::AUTH_PRIVATE_TOKEN);
 
-// Fetch a list of active goals for the user
-$goals = $api->getGoals('frontburner');
+// Fetch a list of goals for the user
+$goals = $api->getGoalApi()->getGoals();
 
 // Output some happy info
 foreach ($goals as $goal) {
@@ -56,4 +56,5 @@ Projects that use this library
 Credits
 -------
 
-[Beeminder](https://www.beeminder.com/) is pretty neat. You should use it :)
+* [Beeminder](https://www.beeminder.com/) is pretty neat. You should use it :)
+* API library design based on [php-github-api](https://github.com/ornicar/php-github-api/).
