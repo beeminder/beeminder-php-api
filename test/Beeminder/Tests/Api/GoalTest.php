@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../ApiTest.php';
+require_once __DIR__ . '/../ApiTest.php';
 
 class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTest
 {

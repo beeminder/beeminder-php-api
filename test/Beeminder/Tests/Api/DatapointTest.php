@@ -55,7 +55,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
             
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints.json', $parameters)
+            ->with('users/:username/goals/goal-1/datapoints', $parameters)
             ->will($this->returnValue($this->_getTestDatapoint()));
         
         $newPoint = $api->createDatapoint('goal-1', 123, 'Test Datapoint 1', 1, false);
@@ -81,7 +81,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
 
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints.json', $parameters)
+            ->with('users/:username/goals/goal-1/datapoints', $parameters)
             ->will($this->returnValue($expectedResult));
         
         $newPoint = $api->createDatapoint('goal-1', 123);

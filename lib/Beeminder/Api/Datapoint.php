@@ -28,7 +28,7 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     public function getGoalDatapoints($slug)
     {
         // Fetch datapoints
-        $datapoints = $this->get("users/:username/goals/{$slug}/datapoints.json");
+        $datapoints = $this->get("users/:username/goals/{$slug}/datapoints");
         
         // Convert to array of objects (if present)
         return self::_objectify($datapoints);
@@ -51,8 +51,7 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
         );
         
         // Send request
-        return (object)$this->post("users/:username/goals/{$goal}/datapoints.json", $parameters);
-        
+        return (object)$this->post("users/:username/goals/{$goal}/datapoints", $parameters);
         
     }
     
