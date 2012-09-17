@@ -18,7 +18,7 @@ Beeminder_Autoloader::register();
 Just replace `/path/to/` with the actual path the API is stored in.
 
 Once the autoloader is included and setup, it's time to create an instance of
-`Beeminder_Client`. After that, sinple set the authorisation tokens (either
+`Beeminder_Client`. After that, simply login using authorisation tokens (either
 OAuth or the private API token) and then call whatever method(s) you
 want. Here's an example:
 
@@ -32,7 +32,7 @@ Beeminder_Autoloader::register();
 $api = new Beeminder_Client();
 
 // Setup auth (private token)
-$api->setAuthToken('super_secret_token');
+$api->login('username', 'secret_token', Beeminder_Client::AUTH_PRIVATE_TOKEN);
 
 // Fetch a list of active goals for the user
 $goals = $api->getGoals('frontburner');
