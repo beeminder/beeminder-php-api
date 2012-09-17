@@ -35,7 +35,7 @@ class Beeminder_Autoloader
         
         // Only process classes in Beeminder package
         if (strpos($className, 'Beeminder') === false) {
-            return;
+            return false;
         }
         
         // Load file if it exists
@@ -44,6 +44,8 @@ class Beeminder_Autoloader
             require $fileName;
             return true;
         }
+
+        return false;
         
     }
     
