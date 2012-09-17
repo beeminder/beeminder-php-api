@@ -156,13 +156,13 @@ class Beeminder_Client
      * 
      * @param string $path The relative path to call.
      * @param array $parameters Optional array of query parameters.
-     * @param array $extraOptions Optional array of options.
+     * @param array $requestOptions Optional array of options.
      * 
      * @return mixed Decoded response.
      */
-    public function get($path, array $parameters = array(), array $extraOptions = array())
+    public function get($path, array $parameters = array(), array $requestOptions = array())
     {
-        return $this->getDriver()->get($path, $parameters, $extraOptions = array());
+        return $this->getDriver()->get($path, $parameters, $requestOptions);
     }
     
     /**
@@ -172,13 +172,13 @@ class Beeminder_Client
      * 
      * @param string $path The relative path to call.
      * @param array $parameters Optional array of values to send.
-     * @param array $extraOptions Optional array of options.
+     * @param array $requestOptions Optional array of options.
      * 
      * @return mixed Decoded response.
      */
     public function post($path, array $parameters = array(), $requestOptions = array())
     {
-        return $this->getHttpClient()->post($path, $parameters, $requestOptions);
+        return $this->getDriver()->post($path, $parameters, $requestOptions);
     }
     
 }
