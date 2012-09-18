@@ -15,7 +15,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
         
         $api->expects($this->once())
             ->method('get')
-            ->with('users/:username/goals/goal-1/datapoints.json')
+            ->with('users/:username/goals/goal-1/datapoints')
             ->will($this->returnValue(array()));
         
         $data = $api->getGoalDatapoints("goal-1");
@@ -29,7 +29,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
         
         $api->expects($this->once())
             ->method('get')
-            ->with('users/:username/goals/goal-1/datapoints.json')
+            ->with('users/:username/goals/goal-1/datapoints')
             ->will($this->returnValue($this->_getTestDatapointsResult()));
         
         $data = $api->getGoalDatapoints("goal-1");
@@ -87,6 +87,25 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
         $newPoint = $api->createDatapoint('goal-1', 123);
         
         $this->assertEquals($expectedResult, $newPoint, "->createDatapoint() returns created item");
+    }
+    
+
+    // ----------------------------------------------------------------------
+    // -- Deleting
+    // ----------------------------------------------------------------------
+    
+    public function testDeleteDatapoint()
+    {
+        $api = $this->getApiMockObject();
+        
+        $api->expects($this->once())
+            ->method('delete')
+            ->with('users/:username/goals/goal-1/datapoints/1')
+            ->will($this->returnValue($this->_getTestDatapoint()));
+        
+        $deleted = $api->deleteDatapoint('goal-1', 1);
+        
+        $this->assertEquals($this->_getTestDatapoint(), $deleted, "->deleteDatapoint() returns deleted item");
     }
     
     

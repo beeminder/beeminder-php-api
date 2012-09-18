@@ -15,7 +15,7 @@ abstract class Beeminder_Tests_ApiTest extends PHPUnit_Framework_TestCase
     public function getApiMockObject()
     {
         return $this->getMockBuilder($this->_getMockName())
-            ->setMethods(array('get', 'post'))
+            ->setMethods(array('get', 'post', 'delete', 'put'))
             ->disableOriginalConstructor()
             ->getMock();
     }
