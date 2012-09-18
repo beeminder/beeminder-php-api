@@ -92,6 +92,13 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
             
         }
         
+        // Set call type (if not post/get)
+        if ($method == 'DELETE') {
+            $curlOptions[CURLOPT_CUSTOMREQUEST] = "DELETE";
+        } else if ($method == 'PUT') { 
+            $curlOptions[CURLOPT_CUSTOMREQUEST] = "PUT";
+        }
+        
         // Call Curl
         $response = $this->_call($curlOptions);
         
