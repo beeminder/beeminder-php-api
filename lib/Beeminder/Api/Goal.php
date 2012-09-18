@@ -11,7 +11,6 @@
  */
 
 
-
 class Beeminder_Api_Goal extends Beeminder_Api
 {
     
@@ -56,4 +55,81 @@ class Beeminder_Api_Goal extends Beeminder_Api
         ));
     }
     
+    
+    // ----------------------------------------------------------------------
+    // -- Creating Goals
+    // ----------------------------------------------------------------------
+    
+    /**
+     * Create a new goal for a user.
+     * 
+     * Requires the following fields:
+     *   - slug
+     *   - title
+     *   - goal_type
+     *   - goaldate
+     *   - goalval
+     *   - rate
+     *
+     * The following fields are optional:
+     *   - ephem
+     *   - panic
+     *   - secret
+     *   - datapublic
+     * 
+     * @param array $fields Array of values for the new goal.
+     * 
+     * @return stdClass The newly created goal object.
+     */
+    public function createGoal(array $fields = array())
+    {
+        return (object)$this->post("users/:username/goals", $fields);
+    }
+    
+    
+    // ----------------------------------------------------------------------
+    // -- Updating Goals
+    // ----------------------------------------------------------------------
+    
+    public function editGoal($goal, array $options)
+    {
+        return (object)$this->put("users/:username/goals/{$goal}", $options);
+    }
+    
+    public function updateGoal($goal)
+    {
+        
+        $parameters = array(
+            'slug'       => $goal->slug,
+            'title'      => $goal->title,
+            'ephem'      => $goal->ephem,
+            'panic'      => $goal->panic,
+            'secret'     => $goal->secret,
+            'datapublic' => $goal->datapublic,
+        );
+        
+        return (object)$this->put("users/:username/goals/{$goal->slug}", $parameters);
+        
+    }
+    
+    
+    // ----------------------------------------------------------------------
+    // -- Updating Yellow Brick Road
+    // ----------------------------------------------------------------------
+    
+    /**
+     * Update the yellow brick road for a goal.
+     */
+    public function updateRoad($goal, $rate = null, $date = null, $value = null)
+    {
+        $parameters = array(
+            'rate'     => $rate,
+            'goaldate' => $date,
+            'goalval'  => $value,
+        );
+        
+        return (object)$this->post("users/:username/goals/{$goal}/dial_road", $parameters);
+        
+    }
+
 }
