@@ -134,7 +134,7 @@ class Beeminder_Client
     {
         if (!isset($this->_apiCache[$name])) {
             $className = 'Beeminder_Api_' . $name;
-            $this->_apiCache[$name] = new $className($this);
+            $this->_apiCache[$name] = new $className($this->getDriver());
         }
         
         return $this->_apiCache[$name];

@@ -56,4 +56,47 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     }
     
     
+    // ----------------------------------------------------------------------
+    // -- Editing Datapoints
+    // ----------------------------------------------------------------------
+
+    public function editDatapoint($datapointId, $goal, $timestamp = null, $value = null, $comment = null)
+    {
+        $parameters = array();
+        if ($timestamp) $parameters['timestamp'] = $timestamp;
+        if ($value)     $parameters['value'] = $value;
+        if ($comment)   $parameters['comment'] = $comment;
+        
+        return (object)$this->put("users/:username/goals/{$goal}/datapoints/{$datapointId}", $parameters);
+    }
+
+    public function updateDatapoint($goalName, $datapoint)
+    {
+        $parameters = array(
+            'timestamp' => $datapoint->timestamp,
+            'value'     => $datapoint->value,
+            'comment'   => $datapoint->comment
+        );
+        
+        return (object)$this->put("users/:username/goals/{$goalName}/datapoints/{$datapoint->id}", $parameters);
+    }
+    
+    
+    // ----------------------------------------------------------------------
+    // -- Deleting Datapoints
+    // ----------------------------------------------------------------------
+    
+    /**
+     * Delete a datapoint.
+     * 
+     * @param string $goal Slug of the goal to delete from.
+     * @param string $datapointId ID of the datapoint to delete.
+     * 
+     * @return stdClass The deleted datapoint object.
+     */
+    public function deleteDatapoint($goal, $datapointId)
+    {
+        return (object)$this->delete("users/:username/goals/{$goal}/datapoints/{$datapointId}");
+    }
+    
 }

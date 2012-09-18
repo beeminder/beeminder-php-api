@@ -15,18 +15,18 @@ abstract class Beeminder_Api
 {
     
     /**
-     * The Beeminder_Client
+     * The Beeminder_Driver to make requests with.
      */
-    private $_client;
+    private $_driver;
     
     
     // ----------------------------------------------------------------------
     // -- Construction
     // ----------------------------------------------------------------------
     
-    public function __construct(Beeminder_Client $client)
+    public function __construct(Beeminder_DriverInterface $driver)
     {
-        $this->_client = $client;
+        $this->_driver = $driver;
     }
     
     
@@ -45,7 +45,7 @@ abstract class Beeminder_Api
      */
     protected function get($path, array $parameters = array(), $requestOptions = array())
     {
-        return $this->_client->get($path, $parameters, $requestOptions);
+        return $this->_driver->get($path, $parameters, $requestOptions);
     }
     
     /**
@@ -59,7 +59,35 @@ abstract class Beeminder_Api
      */
     protected function post($path, array $parameters = array(), $requestOptions = array())
     {
-        return $this->_client->post($path, $parameters, $requestOptions);
+        return $this->_driver->post($path, $parameters, $requestOptions);
+    }
+    
+    /**
+     * Executes a PUT request.
+     * 
+     * @param string $path The relative path to call.
+     * @param array $parameters Optional array of HTTP query parameters
+     * @param array $options Array of request options.
+     * 
+     * @return mixed Decoded response.
+     */
+    protected function put($path, array $parameters = array(), $requestOptions = array())
+    {
+        return $this->_driver->put($path, $parameters, $requestOptions);
+    }
+    
+    /**
+     * Executes a DELETE request.
+     * 
+     * @param string $path The relative path to call.
+     * @param array $parameters Optional array of HTTP query parameters
+     * @param array $options Array of request options.
+     * 
+     * @return mixed Decoded response.
+     */
+    protected function delete($path, array $parameters = array(), $requestOptions = array())
+    {
+        return $this->_driver->delete($path, $parameters, $requestOptions);
     }
     
     

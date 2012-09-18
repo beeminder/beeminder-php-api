@@ -21,6 +21,9 @@ interface Beeminder_DriverInterface
 
     public function get($path, array $parameters = array(), array $options = array());
     public function post($path, array $parameters = array(), array $options = array());
+    public function put($path, array $parameters = array(), array $options = array());
+    public function delete($path, array $parameters = array(), array $options = array());
+
 
 
     // ----------------------------------------------------------------------

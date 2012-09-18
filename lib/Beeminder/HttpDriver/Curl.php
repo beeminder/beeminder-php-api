@@ -75,7 +75,9 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
             
             // Add payload data
             switch ($method) {
-                
+
+                case 'DELETE':
+                case 'PUT':                
                 case 'GET':
                     $curlOptions[CURLOPT_URL] = "{$url}?{$query}";
                     break;

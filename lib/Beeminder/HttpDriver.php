@@ -93,6 +93,35 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         return $this->request($path, $parameters, 'POST', $options);
     }
     
+
+    /**
+     * Executes a PUT request.
+     * 
+     * @param string $path The relative path to call.
+     * @param array $parameters Optional array of HTTP query parameters
+     * @param array $options Array of request options.
+     * 
+     * @return mixed Decoded response.
+     */
+    public function put($path, array $parameters = array(), array $options = array())
+    {
+        return $this->request($path, $parameters, 'PUT', $options);
+    }
+    
+    /**
+     * Executes a DELETE request.
+     * 
+     * @param string $path The relative path to call.
+     * @param array $parameters Optional array of HTTP query parameters
+     * @param array $options Array of request options.
+     * 
+     * @return mixed Decoded response.
+     */
+    public function delete($path, array $parameters = array(), array $options = array())
+    {
+        return $this->request($path, $parameters, 'DELETE', $options);
+    }
+
     /**
      * Generic request method.
      * 
