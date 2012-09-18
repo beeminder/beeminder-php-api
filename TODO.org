@@ -2,15 +2,16 @@
 
 * Resources
 ** Goal
-*** TODO Add support for creating goals
-*** TODO Add support for updating the Yellow Brick Road
+*** DONE Create a goal
+*** DONE Update a goal
+*** DONE Update yellow brick road
 ** User
-*** TODO Get user information
+*** DONE Get user information
 ** Data Point
-*** TODO Add data point
-*** TODO Add multiple data points
-*** TODO Retrieve data points
-*** TODO Delete a data point
-*** TODO Update a data point
+*** DONE Add data point
+*** DONE Add multiple data points
+*** DONE Retrieve data points
+*** DONE Delete a data point
+*** DONE Update a data point
 * Client
 ** TODO Add support for PEAR HTTP_Request2 Library

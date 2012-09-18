@@ -1,8 +1,8 @@
 Beeminder API
 =============
 
-A PHP interface to the Beeminder API. It doesn't do everything yet, but it will
-grow in time.
+A PHP interface to the Beeminder API. Handles everything in v1, although it
+still needs much better error handling and more thorough tests. 
 
 
 Usage
@@ -49,8 +49,8 @@ foreach ($goals as $goal) {
 Projects that use this library
 ------------------------------
 
-* [beeminder-ping](http://github.com/sodaware/beeminder-ping/) -- A plugin to
-  ping Beeminder when a post is made.
+* [beeminder-ping](http://github.com/sodaware/beeminder-ping/) -- A WordPress
+  plugin to ping Beeminder when a post is made.
 
 
 Credits
