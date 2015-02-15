@@ -12,7 +12,7 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
     public function getCurlMock()
     {
         return $this->getMockBuilder( 'Beeminder_HttpDriver_Curl' )
-            ->setMethods(array('_call'))
+            ->setMethods(array('Curl'))
             ->getMock();
     }
 
@@ -67,7 +67,7 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         }
 
         $driver->expects( $this->once() )
-            ->method( '_call' )
+            ->method( 'Curl' )
             ->with( $curl_options )
             ->will( $this->returnValue( $curl_reply ) );
 
@@ -189,16 +189,10 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
 
     public function testCall()
     {
-        $driver = new Beeminder_HttpDriver_Curl_Double();
-        $response = $driver->exposedCall( array() );
+        $driver = new Beeminder_HttpDriver_Curl();
+        $response = $driver->Curl( array() );
         $this->assertEquals( 'No URL set!', $response['error_message'] );
     }
 }
 
-class Beeminder_HttpDriver_Curl_Double extends Beeminder_HttpDriver_Curl
-{
-    public function exposedCall( $options )
-    {
-        return $this->_call( $options );
-    }
-}
+

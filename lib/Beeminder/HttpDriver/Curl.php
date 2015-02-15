@@ -99,7 +99,7 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         }
         
         // Call Curl
-        $response = $this->_call($curlOptions);
+        $response = $this->Curl($curlOptions);
         
         // Check for errors
         if (!in_array($response['headers']['http_code'], array(0, 200, 201))) {
@@ -125,7 +125,7 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
      * @param array Associative array of CURL options.
      * @return array Array containing response, headers and any error details.
      */
-    protected function _call(array $curlOptions)
+    public function Curl(array $curlOptions)
     {
         $curl = curl_init();
 
