@@ -1,10 +1,10 @@
 <?php
 /**
  * Beeminder_HttpDriver_Curl
- * 
+ *
  * Curl based HTTP driver. Used to interact with the API over HTTP using the
  * CURL library.
- * 
+ *
  * @package    BeeminderApi
  * @subpackage HttpDrivers
  * @author     Phil Newton <phil@sodaware.net>
@@ -14,11 +14,11 @@
 
 class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
 {
-    
+
     // ----------------------------------------------------------------------
     // -- Sending Requests
     // ----------------------------------------------------------------------
-    
+
     /**
      * Sends a request to a URI and returns the response as plaintext.
      *
@@ -31,29 +31,60 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
      */
     public function execute($url, array $parameters = array(), $method = 'GET', array $options = array())
     {
-        
         // Initialize curl options
-        $curlOptions = array(
+        $curlOptions = $this->_initialiseCurlOptions( $url, $options );
+
+        // FIXME: This does not belong here. - not curl specific.
+        $extra_parameters = $this->_addAuthParametersIfLoggedIn( $options );
+        $parameters = $extra_parameters + $parameters;
+
+        // FIXME: There is horribleness hiding in here.
+        $extra_curlOptions = $this->_addQueryParameters( $url, $parameters, $method );
+        $curlOptions = $extra_curlOptions + $curlOptions;
+
+        $extra_curlOptions = $this->_setCallType( $method );
+        $curlOptions = $extra_curlOptions + $curlOptions;
+
+        // Call Curl
+        $response = $this->Curl($curlOptions);
+
+        $this->_checkForErrors( $response );
+
+        return $response['response'];
+
+    }
+
+    // ----------------------------------------------------------------------
+    // -- Internal Execution Helpers
+    // ----------------------------------------------------------------------
+
+    protected function _initialiseCurlOptions( $url, $options )
+    {
+        return array(
             CURLOPT_URL            => $url,
             CURLOPT_PORT           => $options['http_port'],
             CURLOPT_USERAGENT      => $options['user_agent'],
+            CURLOPT_TIMEOUT        => $options['timeout'],
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_TIMEOUT        => $options['timeout']
         );
-        
+    }
+
+    protected function _addAuthParametersIfLoggedIn( $options )
+    {
+        $parameters = array();
         // Add auth options if logged in
         if ($options['username']) {
-            
+
             switch ($options['auth_method']) {
-                
+
                 // Login user oAuth
                 case Beeminder_Client::AUTH_OAUTH_TOKEN:
                 default:
                     $parameters += array(
                         'access_token' => $options['token']
-                    );                    
+                    );
                     break;
 
                 // Login using private token
@@ -61,27 +92,34 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
                 default:
                     $parameters += array(
                         'auth_token' => $options['token']
-                    );                    
+                    );
                     break;
-                    
+
             }
         }
-        
+        return $parameters;
+    }
+
+
+    protected function _addQueryParameters( $url, $parameters, $method )
+    {
+        $curlOptions = array();
+
         // Add query parameters
         if (!empty($parameters)) {
-            
+
             // Encode args
-            $query = utf8_encode(http_build_query($parameters, '', '&'));
-            
+            $query = $this->_encodeQuery( $parameters );
+
             // Add payload data
             switch ($method) {
-                
+
                 case 'GET':
                     $curlOptions[CURLOPT_URL] = "{$url}?{$query}";
                     break;
-                
+
                 case 'DELETE':
-                case 'PUT':       
+                case 'PUT':
                 case 'POST':
                     $curlOptions += array(
                         CURLOPT_POST       => true,
@@ -90,30 +128,30 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
                     );
                     break;
             }
-            
         }
-        
+        return $curlOptions;
+    }
+
+    protected function _encodeQuery( $parameters )
+    {
+        $query = utf8_encode(http_build_query($parameters, '', '&'));
+        return $query;
+    }
+
+    protected function _setCallType( $method )
+    {
+        $curlOptions = array();
         // Set call type (if not post/get)
         if ($method == 'DELETE' || $method == 'PUT') {
             $curlOptions[CURLOPT_CUSTOMREQUEST] = $method;
         }
-        
-        // Call Curl
-        $response = $this->Curl($curlOptions);
-
-        $this->_checkForErrors( $response );
-
-        return $response['response'];
-        
+        return $curlOptions;
     }
 
-    // ----------------------------------------------------------------------
-    // -- Internal Execution Helpers
-    // ----------------------------------------------------------------------
 
     /**
      * Check to see if there are any errors in the response.
-     * 
+     *
      * @param  - array result of the curl request.
      * @return - nothing. Will throw an exeception if there are any errors.
      */
@@ -136,10 +174,10 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
             throw new Exception($response['error_message'], $response['error_number']);
         }
     }
-    
+
     /**
      * Call CURL with the specified options.
-     * 
+     *
      * @param array Associative array of CURL options.
      * @return array Array containing response, headers and any error details.
      */
@@ -158,8 +196,8 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         );
 
         curl_close($curl);
-        
+
         return $response;
     }
-    
+
 }
