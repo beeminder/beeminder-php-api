@@ -265,11 +265,20 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
            # $this->assertEquals( 'error message from the response', $e->getMessage() );
             $this->assertEquals( '', $e->getMessage() );
         }
-
-
     }
 
+    public function testCall()
+    {
+        $driver = new Beeminder_HttpDriver_Curl_Double();
+        $response = $driver->exposedCall( array() );
+        $this->assertEquals( 'No URL set!', $response['error_message'] );
+    }
+}
 
-
-
+class Beeminder_HttpDriver_Curl_Double extends Beeminder_HttpDriver_Curl
+{
+    public function exposedCall( $options )
+    {
+        return $this->_call( $options );
+    }
 }
