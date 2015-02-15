@@ -143,7 +143,7 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         //
         #TODO: test what happens when we comment out this line.
         #some tests should fail.
-        $extra_parameters = $this->_addAuthParametersIfLoggedIn( $options );
+        $extra_parameters = $this->_addAuthParameters( $options );
         $parameters = $extra_parameters + $parameters;
 
 
@@ -155,7 +155,7 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         
     }
 
-    public function _addAuthParametersIfLoggedIn( $options )
+    public function _addAuthParameters( $options )
     {
         $parameters = array();
         // Add auth options if logged in

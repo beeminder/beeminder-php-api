@@ -89,7 +89,7 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
         );
 
         $driver->expects( $this->once() )
-            ->method( '_addAuthParametersIfLoggedIn' )
+            ->method( '_addAuthParameters' )
             ->with( array('hoomo$curl_options' ) )
             ->will( $this->returnValue( 'wiible' ) );
 
@@ -105,7 +105,7 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
             'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
             'token'       => 'I am an OAUTH token'
         );
-        $params = $driver->_addAuthParametersIfLoggedIn( $options );
+        $params = $driver->_addAuthParameters( $options );
         $this->assertEquals( array( 'access_token' => $options['token'] ), $params );
     }
 
@@ -117,7 +117,7 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
                 'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
                 'token'       => 'I am a private token'
         );
-        $params = $driver->_addAuthParametersIfLoggedIn( $options );
+        $params = $driver->_addAuthParameters( $options );
         $this->assertEquals( array( 'auth_token' => $options['token'] ), $params );
     }
 
