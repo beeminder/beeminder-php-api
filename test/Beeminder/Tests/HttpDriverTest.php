@@ -3,29 +3,36 @@
 
 class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
 {
-    public function testHttpDriver()
+    private function getHttpDriverMock()
     {
-        $driver = new Beeminder_HttpDriver_Double();
-        $this->assertTrue( $driver instanceof Beeminder_DriverInterface );
+        $stub = $this->getMockBuilder( 'Beeminder_HttpDriver' )
+            ->setMethods(array('execute'))
+            ->getMock();
+
+        $stub->expects( $this->any() )->method( 'execute' )
+            ->will( $this->returnValue( json_encode( "Success!" ) ) );
+
+        return $stub;
     }
 
     public function testRequestTypes()
     {
-        $driver = new Beeminder_HttpDriver_Double();
-        $url = 'some url';
+        $driver = $this->getHttpDriverMock();
+        $path = 'some path';
         $parameters = array();
         $options = array();
 
-        $this->assertEquals( 'Success!', $driver->get(    $url, $parameters, $options ) );
-        $this->assertEquals( 'Success!', $driver->post(   $url, $parameters, $options ) );
-        $this->assertEquals( 'Success!', $driver->put(    $url, $parameters, $options ) );
-        $this->assertEquals( 'Success!', $driver->delete( $url, $parameters, $options ) );
+        $this->assertEquals( 'Success!', $driver->get(    $path, $parameters, $options ) );
+        $this->assertEquals( 'Success!', $driver->post(   $path, $parameters, $options ) );
+        $this->assertEquals( 'Success!', $driver->put(    $path, $parameters, $options ) );
+        $this->assertEquals( 'Success!', $driver->delete( $path, $parameters, $options ) );
     }
 
     // This seems like a YAGNI
     public function testComplainAboutNonJsonFormat()
     {
-        $driver = new Beeminder_HttpDriver_Double();
+        $driver = $this->getHttpDriverMock();
+
         $url = 'some url';
         $parameters = array();
         $options = array( 'format' => '!json' );
@@ -42,14 +49,14 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
 
     public function testSettingOptions()
     {
-        $driver = new Beeminder_HttpDriver_Double();
+        $driver = $this->getHttpDriverMock();
         $driver->setOption( 'some option', 'some value' );
         $this->assertEquals( 'some value', $driver->getOption('some option') );
     }
 
     public function testGettingUnsetOptions()
     {
-        $driver = new Beeminder_HttpDriver_Double();
+        $driver = $this->getHttpDriverMock();
         try { 
             $driver->getOption('non-existant option');
                 $this->fail('Expected an exception' );
@@ -79,13 +86,6 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
 
         $this->_addExecuteCallExpectation( $driver, $expected );
         $response = $driver->request( 'some_path', array(), 'GET', $auth_options );
-    }
-
-    private function getHttpDriverMock()
-    {
-        return $this->getMockBuilder( 'Beeminder_HttpDriver' )
-            ->setMethods(array('execute'))
-            ->getMock();
     }
 
     private function _addExecuteCallExpectation( $driver, $expected )
@@ -124,10 +124,3 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
 
 }
 
-class Beeminder_HttpDriver_Double extends Beeminder_HttpDriver
-{
-    public function execute($url, array $parameters = array(), $method = 'GET', array $options = array())
-    {
-        return json_encode( "Success!" );
-    }
-}
