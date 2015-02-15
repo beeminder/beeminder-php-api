@@ -100,24 +100,42 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         
         // Call Curl
         $response = $this->Curl($curlOptions);
-        
-        // Check for errors
-        if (!in_array($response['headers']['http_code'], array(0, 200, 201))) {
-            throw new Exception( $response['response'], (int) $response['headers']['http_code']);
-        }
-        
-        if ($response['error_number'] != '') {
-            throw new Exception($response['error_message'], $response['error_number']);
-        }
+
+        $this->_checkForErrors( $response );
 
         return $response['response'];
         
     }
 
-
     // ----------------------------------------------------------------------
     // -- Internal Execution Helpers
     // ----------------------------------------------------------------------
+
+    /**
+     * Check to see if there are any errors in the response.
+     * 
+     * @param  - array result of the curl request.
+     * @return - nothing. Will throw an exeception if there are any errors.
+     */
+    protected function _checkForErrors( $response )
+    {
+        $this->_checkForErrorsFromRequest( $response );
+        $this->_checkForErrorsFromCurl( $response );
+    }
+
+    protected function _checkForErrorsFromRequest( $response )
+    {
+        if (!in_array($response['headers']['http_code'], array(0, 200, 201))) {
+            throw new Exception( $response['response'], (int) $response['headers']['http_code']);
+        }
+    }
+
+    protected function _checkForErrorsFromCurl( $response )
+    {
+        if ($response['error_number'] != '') {
+            throw new Exception($response['error_message'], $response['error_number']);
+        }
+    }
     
     /**
      * Call CURL with the specified options.
