@@ -93,5 +93,19 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTest
 
     }
 
+    public function testCreateGoal()
+    {
+        $api = $this->getApiMockObject();
+
+        $parameters = array();
+        $expected_options = $parameters;
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with("users/:username/goals" , $expected_options );
+
+        $api->createGoal( $parameters );
+    }
+
 
 }
