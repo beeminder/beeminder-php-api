@@ -16,173 +16,49 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
             ->getMock();
     }
 
-    public function testExecute()
+    protected function setupLotsOfState( $state = array() )
     {
         $driver = $this->getCurlMock();
 
         $url = 'localhost';
+
         $parameters = array();
-        $method = 'GET';
+        if( array_key_exists( 'parameters', $state ) ) {
+            $parameters = $state['parameters'] + $parameters;
+        }
 
-        $options = array(
-            'http_port' => 823,
-            'user_agent' => 'testing',
-            'timeout' => 5,
-            'username' => null,
-        );
-
-        $curl_options = array (
-                CURLOPT_URL            => 'localhost',
-                CURLOPT_USERAGENT      => 'testing',
-                CURLOPT_PORT           => 823,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT        => 5,
-            );
-
-        $some_fake_json = '{ "hello":"world" }';
-        $curl_reply = array(
-            'response' => $some_fake_json,
-            'headers' => array( 'http_code' => 200 ),
-            'error_number' => '' 
-        );
-
-        $driver->expects( $this->once() )
-            ->method( '_call' )
-            ->with( $curl_options )
-            ->will( $this->returnValue( $curl_reply ) );
-
-        $response = $driver->execute( $url, $parameters, $method, $options );
-
-        $this->assertEquals( $some_fake_json, $response );
-    }
-
-    // FIXME: This test doesn't belong with the curl stuff.
-    public function testExecute_OAUTH_Token()
-    {
-        $driver = $this->getCurlMock();
-
-        $url = 'localhost';
-        $parameters = array();
-        $method = 'GET';
-
-        $options = array(
-            'http_port' => 823,
-            'user_agent' => 'testing',
-            'timeout' => 5,
-            'username' => 'some username',
-            'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
-            'token' => "I'm an oauth token"
-        );
-
-        $curl_options = array (
-                CURLOPT_URL            => 'localhost?access_token=I%27m+an+oauth+token',
-                CURLOPT_USERAGENT      => 'testing',
-                CURLOPT_PORT           => 823,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT        => 5,
-            );
-
-        $some_fake_json = '{ "hello":"world" }';
-        $curl_reply = array(
-            'response' => $some_fake_json,
-            'headers' => array( 'http_code' => 200 ),
-            'error_number' => '' 
-        );
-
-        $driver->expects( $this->once() )
-            ->method( '_call' )
-            ->with( $curl_options )
-            ->will( $this->returnValue( $curl_reply ) );
-
-        $response = $driver->execute( $url, $parameters, $method, $options );
-
-        $this->assertEquals( $some_fake_json, $response );
-    }
-
-    // FIXME: This test doesn't belong with the curl stuff.
-    public function testExecute_AUTH_PRIVATE_Token()
-    {
-        $driver = $this->getCurlMock();
-
-        $url = 'localhost';
-        $parameters = array();
-        $method = 'GET';
-
-        $options = array(
-            'http_port' => 823,
-            'user_agent' => 'testing',
-            'timeout' => 5,
-            'username' => 'some username',
-            'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
-            'token' => "I'm a private token"
-        );
-
-        $curl_options = array (
-                CURLOPT_URL            => 'localhost?auth_token=I%27m+a+private+token',
-                CURLOPT_USERAGENT      => 'testing',
-                CURLOPT_PORT           => 823,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT        => 5,
-            );
-
-        $some_fake_json = '{ "hello":"world" }';
-        $curl_reply = array(
-            'response' => $some_fake_json,
-            'headers' => array( 'http_code' => 200 ),
-            'error_number' => '' 
-        );
-
-        $driver->expects( $this->once() )
-            ->method( '_call' )
-            ->with( $curl_options )
-            ->will( $this->returnValue( $curl_reply ) );
-
-        $response = $driver->execute( $url, $parameters, $method, $options );
-
-        $this->assertEquals( $some_fake_json, $response );
-    }
-
-    public function setupLotsOfState( $state = array() )
-    {
-        $driver = $this->getCurlMock();
-
-        $url = 'localhost';
-        $parameters = array();
         $method = array_key_exists( 'method', $state ) ? $state['method'] : 'GET';
 
         $options = array(
-            'http_port' => 823,
-            'user_agent' => 'testing',
-            'timeout' => 5,
-            'username' => 'some username',
-            'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
-            'token' => "I'm a private token"
+            'http_port' => 'http_port_value',
+            'user_agent' => 'user_agent_value',
+            'timeout' => 'timeout_value',
+            'username' => '',
+            #'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
+            #'token' => "I'm a private token"
         );
+        if( array_key_exists( 'options', $state ) ) {
+            $options = $state['options'] + $options;
+        }
 
         $curl_options = array (
-                CURLOPT_URL            => 'localhost?auth_token=I%27m+a+private+token',
-                CURLOPT_USERAGENT      => 'testing',
-                CURLOPT_PORT           => 823,
+                #CURLOPT_URL            => 'localhost?auth_token=I%27m+a+private+token',
+                CURLOPT_URL            => $url,
+                CURLOPT_USERAGENT      => $options['user_agent'],
+                CURLOPT_PORT           => $options['http_port'],
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_TIMEOUT        => 5,
+                CURLOPT_TIMEOUT        => $options['timeout'],
             );
 
         if( array_key_exists( 'curl_options', $state ) ) {
             $curl_options = $state['curl_options'] + $curl_options;
         }
 
-        $some_fake_json = '{ "hello":"world" }';
 
         $curl_reply = array(
-            'response' => $some_fake_json,
+            'response' => '{ "some":"fake json" }',
             'headers' => array( 'http_code' => 200 ),
             'error_number' => '' 
         );
@@ -195,27 +71,71 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
             ->with( $curl_options )
             ->will( $this->returnValue( $curl_reply ) );
 
-        $bundle = array (
+        $state = array (
             'url' => $url,
             'parameters' => $parameters,
             'method' => $method,
             'options' => $options,
             'driver' => $driver,
-            'response' => $some_fake_json,
+            'response' => $curl_reply['response'],
         );
 
-        return $bundle;
+        return $state;
     }
+
+    // FIXME: This test doesn't belong with the curl stuff.
+    public function testExecute_OAUTH_Token()
+    {
+        $more_state = array( 
+            'options' => array(
+                'username'    => 'oauth user',
+                'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
+                'token'       => 'I am an OAUTH token'
+            ),
+            'curl_options' => array( 
+                CURLOPT_URL => 'localhost?access_token=I+am+an+OAUTH+token'
+            )
+        );
+
+        $bundle = $this->setupLotsOfState( $more_state );
+
+        $response = $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+
+        $this->assertEquals( $bundle['response'], $response );
+    }
+
+    // FIXME: This test doesn't belong with the curl stuff.
+    public function testExecute_AUTH_PRIVATE_Token()
+    {
+        $more_state = array( 
+            'options' => array(
+                'username'    => 'private auth user',
+                'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
+                'token'       => 'I am a private token'
+            ),
+            'curl_options' => array( 
+                CURLOPT_URL => 'localhost?auth_token=I+am+a+private+token'
+            )
+        );
+
+        $bundle = $this->setupLotsOfState( $more_state );
+
+        $response = $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+
+        $this->assertEquals( $bundle['response'], $response );
+    }
+
 
     // FIXME: This test doesn't belong with the curl stuff.
     public function testExecute_Method_Delete()
     {
-        $query = 'auth_token=I%27m+a+private+token';
+        $query = 'key=value';
         $more_state = array( 
             'method' => 'DELETE',
+            'parameters' => array( 'key' => 'value' ),
             'curl_options' => 
                 array (
-                    CURLOPT_URL        =>  'localhost',
+                    CURLOPT_URL        => 'localhost',
                     CURLOPT_POST       => true,
                     CURLOPT_POSTFIELDS => $query,
                     CURLOPT_HTTPHEADER => array('Content-Length: ' . strlen($query)),
