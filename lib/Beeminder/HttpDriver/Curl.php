@@ -103,7 +103,7 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         
         // Check for errors
         if (!in_array($response['headers']['http_code'], array(0, 200, 201))) {
-            throw new Exception(null, (int) $response['headers']['http_code']);
+            throw new Exception( $response['response'], (int) $response['headers']['http_code']);
         }
         
         if ($response['error_number'] != '') {

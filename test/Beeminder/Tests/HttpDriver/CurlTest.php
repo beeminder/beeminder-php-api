@@ -182,8 +182,7 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
             $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
             $this->fail('Was expecting an exception');
         } catch (Exception $e) {
-           # $this->assertEquals( 'error message from the response', $e->getMessage() );
-            $this->assertEquals( '', $e->getMessage() );
+            $this->assertEquals( 'error message from the response', $e->getMessage() );
         }
     }
 
