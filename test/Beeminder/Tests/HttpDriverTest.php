@@ -59,6 +59,68 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
             $this->assertEquals( $message, $e->getMessage() );
         }
     }
+
+    public function getHttpDriverMock()
+    {
+        return $this->getMockBuilder( 'Beeminder_HttpDriver' )
+            ->setMethods(array('execute'))
+            ->getMock();
+    }
+
+
+    // This is not a good test.
+    public function dont_testExecute_OAUTH_Token()
+    {
+        $driver = $this->getHttpDriverMock();
+
+        $more_state = array( 
+            'options' => array(
+                'username'    => 'oauth user',
+                'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
+                'token'       => 'I am an OAUTH token'
+            ),
+        );
+
+        $bundle = array(
+            'url' => 'some url',
+            'parameters' => array(),
+            'method' => 'GET',
+            'options' => $more_state['options'],
+        );
+
+        $driver->expects( $this->once() )
+            ->method( '_addAuthParametersIfLoggedIn' )
+            ->with( array('hoomo$curl_options' ) )
+            ->will( $this->returnValue( 'wiible' ) );
+
+        $response = $driver->request( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+
+    }
+
+    public function test_Params_OAUTH_Token()
+    {
+        $driver = $this->getHttpDriverMock();
+        $options = array(
+            'username'    => 'oauth user',
+            'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
+            'token'       => 'I am an OAUTH token'
+        );
+        $params = $driver->_addAuthParametersIfLoggedIn( $options );
+        $this->assertEquals( array( 'access_token' => $options['token'] ), $params );
+    }
+
+    public function test_Params_AUTH_PRIVATE_Token()
+    {
+        $driver = $this->getHttpDriverMock();
+        $options = array(
+                'username'    => 'private auth user',
+                'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
+                'token'       => 'I am a private token'
+        );
+        $params = $driver->_addAuthParametersIfLoggedIn( $options );
+        $this->assertEquals( array( 'auth_token' => $options['token'] ), $params );
+    }
+
 }
 
 class Beeminder_HttpDriver_Double extends Beeminder_HttpDriver

@@ -83,48 +83,6 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         return $state;
     }
 
-    // FIXME: This test doesn't belong with the curl stuff.
-    public function testExecute_OAUTH_Token()
-    {
-        $more_state = array( 
-            'options' => array(
-                'username'    => 'oauth user',
-                'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
-                'token'       => 'I am an OAUTH token'
-            ),
-            'curl_options' => array( 
-                CURLOPT_URL => 'localhost?access_token=I+am+an+OAUTH+token'
-            )
-        );
-
-        $bundle = $this->setupLotsOfState( $more_state );
-
-        $response = $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
-
-        $this->assertEquals( $bundle['response'], $response );
-    }
-
-    // FIXME: This test doesn't belong with the curl stuff.
-    public function testExecute_AUTH_PRIVATE_Token()
-    {
-        $more_state = array( 
-            'options' => array(
-                'username'    => 'private auth user',
-                'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
-                'token'       => 'I am a private token'
-            ),
-            'curl_options' => array( 
-                CURLOPT_URL => 'localhost?auth_token=I+am+a+private+token'
-            )
-        );
-
-        $bundle = $this->setupLotsOfState( $more_state );
-
-        $response = $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
-
-        $this->assertEquals( $bundle['response'], $response );
-    }
-
 
     // FIXME: This test doesn't belong with the curl stuff.
     public function testExecute_Method_Delete()

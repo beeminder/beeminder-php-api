@@ -34,10 +34,6 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         // Initialize curl options
         $curlOptions = $this->_initialiseCurlOptions( $url, $options );
 
-        // FIXME: This does not belong here. - not curl specific.
-        $extra_parameters = $this->_addAuthParametersIfLoggedIn( $options );
-        $parameters = $extra_parameters + $parameters;
-
         // FIXME: There is horribleness hiding in here.
         $extra_curlOptions = $this->_addQueryParameters( $url, $parameters, $method );
         $curlOptions = $extra_curlOptions + $curlOptions;
@@ -71,34 +67,6 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         );
     }
 
-    protected function _addAuthParametersIfLoggedIn( $options )
-    {
-        $parameters = array();
-        // Add auth options if logged in
-        if ($options['username']) {
-
-            switch ($options['auth_method']) {
-
-                // Login user oAuth
-                case Beeminder_Client::AUTH_OAUTH_TOKEN:
-                default:
-                    $parameters += array(
-                        'access_token' => $options['token']
-                    );
-                    break;
-
-                // Login using private token
-                case Beeminder_Client::AUTH_PRIVATE_TOKEN:
-                default:
-                    $parameters += array(
-                        'auth_token' => $options['token']
-                    );
-                    break;
-
-            }
-        }
-        return $parameters;
-    }
 
 
     protected function _addQueryParameters( $url, $parameters, $method )
