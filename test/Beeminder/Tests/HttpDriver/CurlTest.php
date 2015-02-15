@@ -58,20 +58,175 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals( $some_fake_json, $response );
     }
 
-    // FIXME: This test doesnt belong with the curl stuff.
+    // FIXME: This test doesn't belong with the curl stuff.
     public function testExecute_OAUTH_Token()
     {
+        $driver = $this->getCurlMock();
 
+        $url = 'localhost';
+        $parameters = array();
+        $method = 'GET';
+
+        $options = array(
+            'http_port' => 823,
+            'user_agent' => 'testing',
+            'timeout' => 5,
+            'username' => 'some username',
+            'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
+            'token' => "I'm an oauth token"
+        );
+
+        $curl_options = array (
+                CURLOPT_URL            => 'localhost?access_token=I%27m+an+oauth+token',
+                CURLOPT_USERAGENT      => 'testing',
+                CURLOPT_PORT           => 823,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_TIMEOUT        => 5,
+            );
+
+        $some_fake_json = '{ "hello":"world" }';
+        $curl_reply = array(
+            'response' => $some_fake_json,
+            'headers' => array( 'http_code' => 200 ),
+            'error_number' => '' 
+        );
+
+        $driver->expects( $this->once() )
+            ->method( '_call' )
+            ->with( $curl_options )
+            ->will( $this->returnValue( $curl_reply ) );
+
+        $response = $driver->execute( $url, $parameters, $method, $options );
+
+        $this->assertEquals( $some_fake_json, $response );
     }
 
-    // FIXME: This test doesnt belong with the curl stuff.
+    // FIXME: This test doesn't belong with the curl stuff.
     public function testExecute_AUTH_PRIVATE_Token()
     {
+        $driver = $this->getCurlMock();
 
+        $url = 'localhost';
+        $parameters = array();
+        $method = 'GET';
+
+        $options = array(
+            'http_port' => 823,
+            'user_agent' => 'testing',
+            'timeout' => 5,
+            'username' => 'some username',
+            'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
+            'token' => "I'm a private token"
+        );
+
+        $curl_options = array (
+                CURLOPT_URL            => 'localhost?auth_token=I%27m+a+private+token',
+                CURLOPT_USERAGENT      => 'testing',
+                CURLOPT_PORT           => 823,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_TIMEOUT        => 5,
+            );
+
+        $some_fake_json = '{ "hello":"world" }';
+        $curl_reply = array(
+            'response' => $some_fake_json,
+            'headers' => array( 'http_code' => 200 ),
+            'error_number' => '' 
+        );
+
+        $driver->expects( $this->once() )
+            ->method( '_call' )
+            ->with( $curl_options )
+            ->will( $this->returnValue( $curl_reply ) );
+
+        $response = $driver->execute( $url, $parameters, $method, $options );
+
+        $this->assertEquals( $some_fake_json, $response );
     }
 
-    // FIXME: This test doesnt belong with the curl stuff.
-    public function testExecute_QueryParameters()
+    public function setupLotsOfState( $state = array() )
+    {
+        $driver = $this->getCurlMock();
+
+        $url = 'localhost';
+        $parameters = array();
+        $method = array_key_exists( 'method', $state ) ? $state['method'] : 'GET';
+
+        $options = array(
+            'http_port' => 823,
+            'user_agent' => 'testing',
+            'timeout' => 5,
+            'username' => 'some username',
+            'auth_method' => Beeminder_Client::AUTH_PRIVATE_TOKEN,
+            'token' => "I'm a private token"
+        );
+
+        $curl_options = array (
+                CURLOPT_URL            => 'localhost?auth_token=I%27m+a+private+token',
+                CURLOPT_USERAGENT      => 'testing',
+                CURLOPT_PORT           => 823,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_TIMEOUT        => 5,
+            );
+
+        if( array_key_exists( 'curl_options', $state ) ) {
+            $curl_options = $state['curl_options'] + $curl_options;
+        }
+
+        $some_fake_json = '{ "hello":"world" }';
+        $curl_reply = array(
+            'response' => $some_fake_json,
+            'headers' => array( 'http_code' => 200 ),
+            'error_number' => '' 
+        );
+
+        $driver->expects( $this->once() )
+            ->method( '_call' )
+            ->with( $curl_options )
+            ->will( $this->returnValue( $curl_reply ) );
+
+        $bundle = array (
+            'url' => $url,
+            'parameters' => $parameters,
+            'method' => $method,
+            'options' => $options,
+            'driver' => $driver,
+            'response' => $some_fake_json,
+        );
+
+        return $bundle;
+    }
+
+    // FIXME: This test doesn't belong with the curl stuff.
+    public function testExecute_Method_Delete()
+    {
+        $query = 'auth_token=I%27m+a+private+token';
+        $more_state = array( 
+            'method' => 'DELETE',
+            'curl_options' => 
+                array (
+                    CURLOPT_URL        =>  'localhost',
+                    CURLOPT_POST       => true,
+                    CURLOPT_POSTFIELDS => $query,
+                    CURLOPT_HTTPHEADER => array('Content-Length: ' . strlen($query)),
+                    CURLOPT_CUSTOMREQUEST => 'DELETE'
+                ),
+        );
+
+        $bundle = $this->setupLotsOfState( $more_state );
+
+        $response = $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+
+        $this->assertEquals( $bundle['response'], $response );
+    }
+
+    public function testExecute_Method_Put()
     {
 
     }
