@@ -71,6 +71,27 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTest
 
     }
 
+    public function testUpdateRoad()
+    {
+        $api = $this->getApiMockObject();
+
+        $slug = 'a_slug';
+
+        $options = array (
+            'rate'  => 1, 'date'  => 2, 'value' => 3,
+        );
+
+        $expected_options = array (
+            'rate'     => 1, 'goaldate' => 2, 'goalval'  => 3,
+        );
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with("users/:username/goals/{$slug}/dial_road" , $expected_options );
+
+        $api->updateRoad( $slug, $options['rate'], $options['date'], $options['value'] );
+
+    }
 
 
 }
