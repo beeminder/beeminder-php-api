@@ -60,6 +60,16 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         return $this->_options[$optionName];
     }
     
+    /**
+     * Get all options.
+     * 
+     * @return array of option key => value pairs..
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
+    
     
     // ----------------------------------------------------------------------
     // -- GET / POST / Request Helpers
@@ -141,11 +151,8 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         // Create the full url
         $url = $this->createUrl($path, $options);
         //
-        #TODO: test what happens when we comment out this line.
-        #some tests should fail.
         $extra_parameters = $this->_addAuthParameters( $options );
         $parameters = $extra_parameters + $parameters;
-
 
         // Send request and get response
         $response = $this->execute($url, $parameters, $method, $options);

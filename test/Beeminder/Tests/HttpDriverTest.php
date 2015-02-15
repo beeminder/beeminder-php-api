@@ -60,41 +60,42 @@ class Beeminder_Tests_HttpDriverTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function getHttpDriverMock()
+    public function testAddAuthParameters()
+    {
+        $driver = $this->getHttpDriverMock();
+
+        $auth_options = array(
+                'username'    => 'oauth user',
+                'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
+                'token'       => 'I am an OAUTH token'
+            );
+
+        $expected = array( 
+            'url'        => "https://www.beeminder.com/api/v1/some_path.json",
+            'parameters' => array( 'access_token' => $auth_options['token'] ),
+            'method'     => 'GET',
+            'options'    => $auth_options + $driver->getOptions(),
+        );
+
+        $this->_addExecuteCallExpectation( $driver, $expected );
+        $response = $driver->request( 'some_path', array(), 'GET', $auth_options );
+    }
+
+    private function getHttpDriverMock()
     {
         return $this->getMockBuilder( 'Beeminder_HttpDriver' )
             ->setMethods(array('execute'))
             ->getMock();
     }
 
-
-    // This is not a good test.
-    public function dont_testExecute_OAUTH_Token()
+    private function _addExecuteCallExpectation( $driver, $expected )
     {
-        $driver = $this->getHttpDriverMock();
-
-        $more_state = array( 
-            'options' => array(
-                'username'    => 'oauth user',
-                'auth_method' => Beeminder_Client::AUTH_OAUTH_TOKEN,
-                'token'       => 'I am an OAUTH token'
-            ),
-        );
-
-        $bundle = array(
-            'url' => 'some url',
-            'parameters' => array(),
-            'method' => 'GET',
-            'options' => $more_state['options'],
-        );
-
         $driver->expects( $this->once() )
-            ->method( '_addAuthParameters' )
-            ->with( array('hoomo$curl_options' ) )
-            ->will( $this->returnValue( 'wiible' ) );
-
-        $response = $driver->request( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
-
+            ->method( 'execute' )
+            ->with( $expected['url'],
+                    $expected['parameters'],
+                    $expected['method'],
+                    $expected['options'] );
     }
 
     public function test_Params_OAUTH_Token()
