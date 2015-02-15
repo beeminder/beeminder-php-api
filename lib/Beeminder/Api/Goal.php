@@ -91,28 +91,33 @@ class Beeminder_Api_Goal extends Beeminder_Api
     // -- Updating Goals
     // ----------------------------------------------------------------------
     
+    /**
+     * Update a goal object
+     *
+     * Note: if you need to change the slug you have to call editGoal.
+     *
+     * @param stdClass altered goal object to update.
+     * @return array Array of goals objects.
+     */
+    public function updateGoal(stdClass $goal)
+    {
+        $required = array( 'slug' );
+        $optional = array( 'title', 'panic', 'secret', 'datapublic');
+        foreach( array_merge( $required, $optional ) as $parameter )
+        {
+            if( property_exists( $goal, $parameter ) ) {
+                $parameters[$parameter] = $goal->$parameter;
+            }
+        }
+
+        return $this->editGoal( $goal->slug, $parameters ); 
+    }
+
     public function editGoal($goal, array $options)
     {
         return (object)$this->put("users/:username/goals/{$goal}", $options);
     }
-    
-    public function updateGoal($goal)
-    {
-        
-        $parameters = array(
-            'slug'       => $goal->slug,
-            'title'      => $goal->title,
-            'ephem'      => $goal->ephem,
-            'panic'      => $goal->panic,
-            'secret'     => $goal->secret,
-            'datapublic' => $goal->datapublic,
-        );
-        
-        return (object)$this->put("users/:username/goals/{$goal->slug}", $parameters);
-        
-    }
-    
-    
+
     // ----------------------------------------------------------------------
     // -- Updating Yellow Brick Road
     // ----------------------------------------------------------------------
