@@ -180,11 +180,15 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         }
 
         $some_fake_json = '{ "hello":"world" }';
+
         $curl_reply = array(
             'response' => $some_fake_json,
             'headers' => array( 'http_code' => 200 ),
             'error_number' => '' 
         );
+        if( array_key_exists( 'curl_reply', $state ) ) {
+            $curl_reply = $state['curl_reply'] + $curl_reply;
+        }
 
         $driver->expects( $this->once() )
             ->method( '_call' )
@@ -226,8 +230,42 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals( $bundle['response'], $response );
     }
 
-    public function testExecute_Method_Put()
+    public function testExecute_Exception_ErrorNumber()
     {
+        $more_state = array( 
+            'curl_reply'  => array(
+                'error_number' => 1,
+                'error_message' => 'error message from the response'
+            )
+        );
+        $bundle = $this->setupLotsOfState( $more_state );
+
+        try {
+            $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+            $this->fail('Was expecting an exception');
+        } catch (Exception $e) {
+            $this->assertEquals( 'error message from the response', $e->getMessage() );
+        }
+    }
+
+    public function testExecute_Exception_Nota20x()
+    {
+        $more_state = array( 
+            'curl_reply'  => array(
+                'headers' => array( 'http_code' => 55 ),
+                'response' => 'error message from the response'
+            )
+        );
+        $bundle = $this->setupLotsOfState( $more_state );
+
+        try {
+            $bundle['driver']->execute( $bundle['url'], $bundle['parameters'], $bundle['method'], $bundle['options'] );
+            $this->fail('Was expecting an exception');
+        } catch (Exception $e) {
+           # $this->assertEquals( 'error message from the response', $e->getMessage() );
+            $this->assertEquals( '', $e->getMessage() );
+        }
+
 
     }
 
