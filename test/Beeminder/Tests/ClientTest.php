@@ -49,6 +49,30 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
 
         $client->login($username, $token, $method);
     }
+
+    //FIXME: this test doesn't test the default method is set.
+    public function testLoginWithoutMethod()
+    {
+        $username = 'test_user';
+        $token    = 'test_token';
+
+        $driver = $this->getHttpDriverMock();
+        $driver->expects($this->exactly(3))
+            ->method('setOption')
+            ->will($this->returnValue($driver));
+
+        $client = $this->getClientMockBuilder()
+            ->setMethods(array('getDriver'))
+            ->getMock();
+
+        $client->expects($this->once())
+            ->method('getDriver')
+            ->with()
+            ->will($this->returnValue($driver));
+
+        $client->login($username, $token);
+    }
+    
     
     public function testLogout()
     {
@@ -118,10 +142,22 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
     // -- API Helpers
     // ------------------------------------------------------------
     
+    public function testGetUserApiHelper()
+    {
+        $client = new Beeminder_Client();
+        $this->assertInstanceOf('Beeminder_Api_User', $client->getUserApi());
+    }
+
     public function testGetGoalApiHelper()
     {
         $client = new Beeminder_Client();
-        $this->assertInstanceOf('Beeminder_Api_Goal', $client->getgoalApi());
+        $this->assertInstanceOf('Beeminder_Api_Goal', $client->getGoalApi());
+    }
+
+    public function testGetDatapointApiHelper()
+    {
+        $client = new Beeminder_Client();
+        $this->assertInstanceOf('Beeminder_Api_Datapoint', $client->getDatapointApi());
     }
 
 
