@@ -100,10 +100,20 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
         return $curlOptions;
     }
 
-    protected function _encodeQuery( $parameters )
+    public function _encodeQuery( $parameters )
     {
-        $query = utf8_encode(http_build_query($parameters, '', '&'));
-        return $query;
+        $json_encoded = $this->_jsonEncodeArrays( $parameters );
+        return utf8_encode(http_build_query( $json_encoded, '', '&'));
+    }
+
+    protected function _jsonEncodeArrays( $parameters )
+    {
+        foreach( $parameters as $key => &$value ) {
+            if( is_array( $value ) ) {
+                $value = json_encode( $value );
+            }
+        }
+        return $parameters;
     }
 
     protected function _setCallType( $method )

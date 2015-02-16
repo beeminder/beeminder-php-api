@@ -162,6 +162,15 @@ class Beeminder_Tests_HttpDriver_CurlTest extends PHPUnit_Framework_TestCase
         $response = $driver->Curl( array() );
         $this->assertEquals( 'No URL set!', $response['error_message'] );
     }
+
+    public function testEncodeQueryConvertsArraysToJson()
+    {
+        $driver = new Beeminder_HttpDriver_Curl();
+        $parameters = array( 'greeting' => array( 'hello', 'world') );
+        $expected = sprintf( "greeting=%s", urlencode( json_encode( $parameters['greeting'] ) ));
+        $this->assertEquals( $expected, $driver->_encodeQuery( $parameters ) );
+    }
+
 }
 
 
