@@ -71,6 +71,20 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
 
     }
 
+    public function testUpdateGoalRoadAll()
+    {
+        $api = $this->getApiMockObject();
+
+        $goal = (object) array( 'slug' => 'value', 'roadall' => array( array("road matrix")) );
+        $expected_options = array( 'slug' => 'value', 'roadall' => $goal->roadall );
+
+        $api->expects($this->once())
+            ->method('put')
+            ->with('users/:username/goals/' . $goal->slug , $expected_options );
+
+        $api->updateGoal( $goal );
+    }
+
     public function testUpdateRoad()
     {
         $api = $this->getApiMockObject();

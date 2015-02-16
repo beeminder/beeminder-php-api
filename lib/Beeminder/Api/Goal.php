@@ -102,7 +102,7 @@ class Beeminder_Api_Goal extends Beeminder_Api
     public function updateGoal(stdClass $goal)
     {
         $required = array( 'slug' );
-        $optional = array( 'title', 'panic', 'secret', 'datapublic');
+        $optional = array( 'title', 'panic', 'secret', 'datapublic', 'roadall');
         foreach( array_merge( $required, $optional ) as $parameter )
         {
             if( property_exists( $goal, $parameter ) ) {
