@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../ApiTest.php';
+require_once __DIR__ . '/../ApiTestCase.php';
 
-class Beeminder_Tests_Api_UserTest extends Beeminder_Tests_ApiTest
+class Beeminder_Tests_Api_UserTest extends Beeminder_Tests_ApiTestCase
 {
     
     // ----------------------------------------------------------------------
