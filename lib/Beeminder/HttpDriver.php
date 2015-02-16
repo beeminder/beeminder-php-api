@@ -23,7 +23,7 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         'protocol'   => 'https',
         'url'        => ':protocol://www.beeminder.com/api/v1/:path.:format',
         'format'     => 'json',
-        'user_agent' => 'beeminder-api (http://github.com/sodaware/beeminder-api)',
+        'user_agent' => 'beeminder-php-api (https://github.com/beeminder/beeminder-php-api)',
         'http_port'  => 443,
         'timeout'    => 10,
         'username'   => null,
