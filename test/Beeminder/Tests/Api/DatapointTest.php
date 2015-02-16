@@ -4,76 +4,76 @@ require_once __DIR__ . '/../ApiTest.php';
 
 class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
 {
-    
+
     // ----------------------------------------------------------------------
     // -- Fetching Datapoints
     // ----------------------------------------------------------------------
-    
+
     public function testGetGoalDatapoints()
     {
         $api = $this->getApiMockObject();
-        
+
         $api->expects($this->once())
             ->method('get')
             ->with('users/:username/goals/goal-1/datapoints')
             ->will($this->returnValue(array()));
-        
+
         $data = $api->getGoalDatapoints("goal-1");
-        
+
         $this->assertEquals(array(), $data, "->getGoalDatapoints() returns empty array for empty set");
     }
-    
+
     public function testGetGoalDatapointsConversion()
     {
         $api = $this->getApiMockObject();
-        
+
         $api->expects($this->once())
             ->method('get')
             ->with('users/:username/goals/goal-1/datapoints')
             ->will($this->returnValue($this->_getTestDatapointsResult()));
-        
+
         $data = $api->getGoalDatapoints("goal-1");
-        
+
         $this->assertEquals(2, count($data), "->getGoalDatapoints() returns empty array for empty set");
     }
-    
-    
+
+
     // ----------------------------------------------------------------------
     // -- Creating Data
     // ----------------------------------------------------------------------
-    
+
     public function testCreateDatapoint()
     {
         $api = $this->getApiMockObject();
-        
+
         $parameters = array(
             'timestamp' => 1,
             'value'     => 123,
             'comment'   => 'Test Datapoint 1',
             'sendmail'  => false,
         );
-            
+
         $api->expects($this->once())
             ->method('post')
             ->with('users/:username/goals/goal-1/datapoints', $parameters)
             ->will($this->returnValue($this->_getTestDatapoint()));
-        
+
         $newPoint = $api->createDatapoint('goal-1', 123, 'Test Datapoint 1', 1, false);
-        
+
         $this->assertEquals($this->_getTestDatapoint(), $newPoint, "->createDatapoint() returns created item");
     }
 
     public function testCreateDatapointWithoutDetails()
     {
         $api = $this->getApiMockObject();
-        
+
         $parameters = array(
             'value'     => 123,
             'timestamp' => time(),
             'comment'   => '',
             'sendmail'  => false
         );
-        
+
         $expectedResult = $this->_getTestDatapoint();
         $expectedResult->timestamp = $parameters['timestamp'];
         $expectedResult->comment   = '';
@@ -83,32 +83,98 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
             ->method('post')
             ->with('users/:username/goals/goal-1/datapoints', $parameters)
             ->will($this->returnValue($expectedResult));
-        
+
         $newPoint = $api->createDatapoint('goal-1', 123);
-        
+
         $this->assertEquals($expectedResult, $newPoint, "->createDatapoint() returns created item");
     }
-    
+
+    public function testCreateDatapoints()
+    {
+        $api = $this->getApiMockObject();
+
+        $parameters = array(
+            'datapoints' => array( 
+                'timestamp' => 1,
+                'value'     => 123,
+                'comment'   => 'Test Datapoint 1',
+            ),
+            'sendmail'  => false,
+        );
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with('users/:username/goals/goal-1/datapoints/create_all', $parameters)
+            ->will($this->returnValue($this->_getTestDatapoint()));
+
+        $api->createDatapoints('goal-1', $parameters['datapoints'], $parameters['sendmail']);
+    }
 
     // ----------------------------------------------------------------------
     // -- Deleting
     // ----------------------------------------------------------------------
-    
+
     public function testDeleteDatapoint()
     {
         $api = $this->getApiMockObject();
-        
+
         $api->expects($this->once())
             ->method('delete')
             ->with('users/:username/goals/goal-1/datapoints/1')
             ->will($this->returnValue($this->_getTestDatapoint()));
-        
+
         $deleted = $api->deleteDatapoint('goal-1', 1);
-        
+
         $this->assertEquals($this->_getTestDatapoint(), $deleted, "->deleteDatapoint() returns deleted item");
     }
-    
-    
+
+
+    // ----------------------------------------------------------------------
+    // -- Editing / Updating.
+    // ----------------------------------------------------------------------
+
+
+    public function testEditDatapoint()
+    {
+        $api = $this->getApiMockObject();
+
+        $goal = 'goal-1';
+        $datapointsID = 1234;
+        $parameters = array(
+            'timestamp' => 1,
+            'value'     => 123,
+            'comment'   => 'Test Datapoint 1',
+        );
+
+        $api->expects($this->once())
+            ->method('put')
+            ->with('users/:username/goals/goal-1/datapoints/1234', $parameters);
+#            ->will($this->returnValue($this->_getTestDatapoint()));
+
+        $api->editDatapoint( $datapointsID, $goal, $parameters['timestamp'], $parameters['value'], $parameters['comment'] );
+
+    }
+
+    public function testUpdateDatapoint()
+    {
+        $api = $this->getApiMockObject();
+
+        $goal = 'goal-1';
+        $parameters = array(
+            'timestamp' => 1,
+            'value'     => 123,
+            'comment'   => 'Test Datapoint 1',
+        );
+        $datapoint = (object) ($parameters + array( 'id' => 1234 ));
+
+        $api->expects($this->once())
+            ->method('put')
+            ->with('users/:username/goals/goal-1/datapoints/1234', $parameters);
+
+        $api->updateDatapoint( $goal, $datapoint );
+
+    }
+
     // ----------------------------------------------------------------------
     // -- Test Data
     // ----------------------------------------------------------------------
@@ -116,7 +182,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
     protected function _getTestDatapointsResult()
     {
         return array(
-            
+
             array(
                 'timestamp'  => 1,
                 'value'      => 13,
@@ -124,7 +190,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
                 'updated_at' => 1,
                 'comment'    => 'Test Datapoint 1',
             ),
-            
+
             array(
                 'timestamp'  => 2,
                 'value'      => 19,
@@ -145,6 +211,5 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTest
             'comment'    => 'Test Datapoint 1',
         );
     }
-
 
 }
