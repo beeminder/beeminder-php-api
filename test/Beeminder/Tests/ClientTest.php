@@ -6,14 +6,14 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
     // ------------------------------------------------------------
     // -- Creation
     // ------------------------------------------------------------
-    
+
     public function testCreateWithoutDriver()
     {
         $client = new Beeminder_Client();
-        
+
         $this->assertInstanceOf('Beeminder_HttpDriver', $client->getDriver());
     }
-    
+
     public function testCreateWidthHttpClientDriver()
     {
         $driver = $this->getHttpDriverMock();
@@ -21,27 +21,27 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($driver, $client->getDriver());
     }
-    
-    
+
+
     // ------------------------------------------------------------
     // -- Authentication Tests
     // ------------------------------------------------------------
-    
+
     public function testLogin()
     {
         $username = 'test_user';
         $token    = 'test_token';
         $method   = 'method';
-        
+
         $driver = $this->getHttpDriverMock();
         $driver->expects($this->exactly(3))
             ->method('setOption')
             ->will($this->returnValue($driver));
-        
+
         $client = $this->getClientMockBuilder()
             ->setMethods(array('getDriver'))
             ->getMock();
-        
+
         $client->expects($this->once())
             ->method('getDriver')
             ->with()
@@ -50,16 +50,21 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
         $client->login($username, $token, $method);
     }
 
-    //FIXME: this test doesn't test the default method is set.
     public function testLoginWithoutMethod()
     {
         $username = 'test_user';
         $token    = 'test_token';
 
         $driver = $this->getHttpDriverMock();
-        $driver->expects($this->exactly(3))
-            ->method('setOption')
-            ->will($this->returnValue($driver));
+
+        $driver->expects($this->any())
+           ->method('setOption')
+           ->will($this->returnValue($driver));
+
+        $driver->expects($this->at(0))
+           ->method('setOption')
+           ->with( 'auth_method', Beeminder_Client::AUTH_PRIVATE_TOKEN )
+           ->will($this->returnValue($driver));
 
         $client = $this->getClientMockBuilder()
             ->setMethods(array('getDriver'))
@@ -72,27 +77,27 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
 
         $client->login($username, $token);
     }
-    
-    
+
+
     public function testLogout()
     {
-        
+
         $client = $this->getClientMockBuilder()
             ->setMethods(array('login'))
             ->getMock();
-        
+
         $client->expects($this->once())
             ->method('login')
             ->with(null, null, null);
-        
+
         $client->logout();
     }
- 
-    
+
+
     // ------------------------------------------------------------
     // -- Request Tests
     // ------------------------------------------------------------
-    
+
     public function testGet()
     {
         $path      = '/example/path/';
@@ -133,15 +138,15 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
             ->method('getDriver')
             ->with()
             ->will($this->returnValue($driver));
-        
+
         $client->post($path, $parameters, $options);
     }
-    
-    
+
+
     // ------------------------------------------------------------
     // -- API Helpers
     // ------------------------------------------------------------
-    
+
     public function testGetUserApiHelper()
     {
         $client = new Beeminder_Client();
@@ -164,13 +169,13 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
     // ------------------------------------------------------------
     // -- Mock Helpers
     // ------------------------------------------------------------
-    
+
     protected function getClientMockBuilder()
     {
         return $this->getMockBuilder('Beeminder_Client')
             ->disableOriginalConstructor();
     }
-    
+
     protected function getHttpDriverMock()
     {
         return $this->getMockBuilder('Beeminder_HttpDriver')
