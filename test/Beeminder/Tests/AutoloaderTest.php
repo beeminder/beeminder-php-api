@@ -24,5 +24,20 @@ class Beeminder_Tests_AutoloaderTest extends PHPUnit_Framework_TestCase
         $autoloader = new Beeminder_Autoloader();
         $this->assertTrue($autoloader->autoload('Beeminder_Api'), '->autoload() returns true when class loaded');
     }
-    
+
+    public function testManuallyLoadNonExistantBeeminderClass()
+    {
+        $autoloader = new Beeminder_Autoloader();
+        $this->assertFalse($autoloader->autoload('Beeminder_Nonexistant'));
+    }
+
+    public function testRegister()
+    {
+        $function = array( 'Beeminder_Autoloader', 'autoload' );
+        spl_autoload_unregister( $function );
+        $this->assertFalse( in_array( $function, spl_autoload_functions() ));
+        Beeminder_Autoloader::register();
+        $this->assertTrue( in_array( $function, spl_autoload_functions() ));
+    }
+
 }

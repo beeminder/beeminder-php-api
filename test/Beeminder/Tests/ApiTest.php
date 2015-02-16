@@ -1,22 +1,40 @@
 <?php
-// Abstract class
 
-abstract class Beeminder_Tests_ApiTest extends PHPUnit_Framework_TestCase
+class Beeminder_Tests_ApiTest extends PHPUnit_Framework_TestCase
 {
-    
-    protected function _getMockName()
+    public function testProxyMethods()
     {
-        $class = get_class($this);
-        $class = str_replace('Tests_', '', $class);
-        $class = substr($class, 0, -4);
-        return $class;
+       foreach( array( 'get','put','post','delete') as $method ) {
+            $api = $this->_getMockApiWithExpectation( $method );
+            $api->$method();
+       }
     }
 
-    public function getApiMockObject()
+    protected function _getMockApiWithExpectation( $method )
     {
-        return $this->getMockBuilder($this->_getMockName())
-            ->setMethods(array('get', 'post', 'delete', 'put'))
-            ->disableOriginalConstructor()
-            ->getMock();
+        $driver = $this->getMockBuilder( 'Beeminder_HttpDriver' )->getMock();
+        $api = new Beeminder_Api_Double( $driver );
+
+        $driver->expects($this->once())->method($method);
+        return $api;
+    }
+}
+
+class Beeminder_Api_Double extends Beeminder_Api
+{
+    public function get() {
+        return parent::get( 'path', array(), array() );
+    }
+
+    public function put() {
+        return parent::put( 'path', array(), array() );
+    }
+
+    public function delete() {
+        return parent::delete( 'path', array(), array() );
+    }
+
+    public function post() {
+        return parent::post( 'path', array(), array() );
     }
 }

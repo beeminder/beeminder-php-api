@@ -23,7 +23,7 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         'protocol'   => 'https',
         'url'        => ':protocol://www.beeminder.com/api/v1/:path.:format',
         'format'     => 'json',
-        'user_agent' => 'beeminder-api (http://github.com/sodaware/beeminder-api)',
+        'user_agent' => 'beeminder-php-api (https://github.com/beeminder/beeminder-php-api)',
         'http_port'  => 443,
         'timeout'    => 10,
         'username'   => null,
@@ -58,6 +58,16 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
     public function getOption($optionName)
     {
         return $this->_options[$optionName];
+    }
+    
+    /**
+     * Get all options.
+     * 
+     * @return array of option key => value pairs..
+     */
+    public function getOptions()
+    {
+        return $this->_options;
     }
     
     
@@ -140,13 +150,45 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
         
         // Create the full url
         $url = $this->createUrl($path, $options);
-        
+        //
+        $extra_parameters = $this->_addAuthParameters( $options );
+        $parameters = $extra_parameters + $parameters;
+
         // Send request and get response
         $response = $this->execute($url, $parameters, $method, $options);
 
         // Decode & return
         return $this->decodeResponse($response, $options);
         
+    }
+
+    public function _addAuthParameters( $options )
+    {
+        $parameters = array();
+        // Add auth options if logged in
+        if ($options['username']) {
+
+            switch ($options['auth_method']) {
+
+                // Login user oAuth
+                case Beeminder_Client::AUTH_OAUTH_TOKEN:
+                default:
+                    $parameters += array(
+                        'access_token' => $options['token']
+                    );
+                    break;
+
+                // Login using private token
+                case Beeminder_Client::AUTH_PRIVATE_TOKEN:
+                default:
+                    $parameters += array(
+                        'auth_token' => $options['token']
+                    );
+                    break;
+
+            }
+        }
+        return $parameters;
     }
 
 
