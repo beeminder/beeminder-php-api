@@ -54,7 +54,7 @@ class Beeminder_HttpDriver_Curl extends Beeminder_HttpDriver
     // -- Internal Execution Helpers
     // ----------------------------------------------------------------------
 
-    protected function _initialiseCurlOptions( $url, $options )
+    public function _initialiseCurlOptions( $url, $options )
     {
         return array(
             CURLOPT_URL            => $url,
