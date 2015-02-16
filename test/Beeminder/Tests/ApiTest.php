@@ -1,22 +1,10 @@
 <?php
-// Abstract class
+require_once __DIR__ . '/ApiTestCase.php';
 
-abstract class Beeminder_Tests_ApiTest extends PHPUnit_Framework_TestCase
+class Beeminder_Tests_ApiTest extends Beeminder_Tests_ApiTestCase
 {
-    
-    protected function _getMockName()
+    #TODO: write these tests.
+    public function testSomething()
     {
-        $class = get_class($this);
-        $class = str_replace('Tests_', '', $class);
-        $class = substr($class, 0, -4);
-        return $class;
-    }
-
-    public function getApiMockObject()
-    {
-        return $this->getMockBuilder($this->_getMockName())
-            ->setMethods(array('get', 'post', 'delete', 'put'))
-            ->disableOriginalConstructor()
-            ->getMock();
     }
 }
