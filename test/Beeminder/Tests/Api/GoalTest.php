@@ -121,5 +121,23 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
         $api->createGoal( $parameters );
     }
 
+    public function testUpdateGoalSlug()
+    {
+        $api = $this->getApiMockObject();
+
+        # Should we validate slugs?
+        $goal     = 'original_slug';
+        $new_slug = 'some_new_slug';
+
+        $parameters = array( 'slug' => $new_slug );
+        $expected_options = $parameters;
+
+        $api->expects($this->once())
+            ->method('put')
+            ->with(sprintf('users/:username/goals/%s',$goal), $expected_options );
+
+        $api->updateGoalSlug( $goal, $new_slug );
+    }
+
 
 }
