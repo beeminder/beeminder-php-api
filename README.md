@@ -2,7 +2,7 @@ Beeminder API
 =============
 
 A PHP interface to the Beeminder API. Handles everything in v1, although it
-still needs much better error handling and more thorough tests. 
+still needs much better error handling. 
 
 
 Usage
