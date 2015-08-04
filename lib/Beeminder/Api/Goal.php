@@ -94,7 +94,7 @@ class Beeminder_Api_Goal extends Beeminder_Api
     /**
      * Update a goal object
      *
-     * Note: if you need to change the slug you have to call editGoal.
+     * Note: if you need to change the slug you should call updateSlug.
      *
      * @param stdClass altered goal object to update.
      * @return array Array of goals objects.
@@ -110,7 +110,16 @@ class Beeminder_Api_Goal extends Beeminder_Api
             }
         }
 
-        return $this->editGoal( $goal->slug, $parameters ); 
+        return $this->editGoal( $goal->slug, $parameters );
+    }
+
+    /*
+     * Update the slug of a goal.
+     */
+    public function updateSlug( stdClass $goal, $new_slug )
+    {
+        $parameters = array( 'slug' => $new_slug );
+        return $this->editGoal( $goal->slug, $parameters );
     }
 
     public function editGoal($goal, array $options)
