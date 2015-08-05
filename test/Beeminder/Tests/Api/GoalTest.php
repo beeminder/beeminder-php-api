@@ -11,9 +11,20 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
 
         $api->expects($this->once())
             ->method('get')
-            ->with('users/:username/goals/goal-1');
+            ->with('users/:username/goals/goal-1', array());
 
         $api->getGoal("goal-1");
+    }
+
+    public function testGetGoalWithDatapoints()
+    {
+        $api = $this->getApiMockObject();
+
+        $api->expects($this->once())
+            ->method('get')
+            ->with('users/:username/goals/goal-1', array('datapoints'=>'true'));
+
+        $api->getGoalWithDatapoints("goal-1");
     }
 
     public function testGetGoals()

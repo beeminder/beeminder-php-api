@@ -46,15 +46,33 @@ class Beeminder_Api_Goal extends Beeminder_Api
      * Fetch information about a single goal.
      * 
      * @param string $slug Goal slug to retrieve.
-     * @return stdClass Object containing 
+     * @param boolan $includeDatapoints whether to include the goal's datapoints
+     * @return stdClass Object containing the goal data.
      */
     public function getGoal($slug, $includeDatapoints = false)
     {
-        return (object)$this->get("users/:username/goals/{$slug}", array(
-            'datapoints' => $includeDatapoints
-        ));
+        $params = array();
+
+        if($includeDatapoints) {
+            # 20150805 - Beeminder API currently requires a
+            # literal string rather than boolean.
+            $params['datapoints'] = 'true';
+        }
+
+        return (object)$this->get("users/:username/goals/{$slug}", $params );
     }
-    
+
+    /**
+     * Fetch goal data including datapoints.
+     *
+     * @param string $slug Goal slug to retrieve.
+     * @return stdClass Object containing the goal data with datapoints included.
+     *
+     */
+    public function getGoalWithDatapoints($slug)
+    {
+        return $this->getGoal($slug, true);
+    }
     
     // ----------------------------------------------------------------------
     // -- Creating Goals
