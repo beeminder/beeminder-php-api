@@ -79,17 +79,17 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     // -- Editing Datapoints
     // ----------------------------------------------------------------------
 
-    public function editDatapoint($datapointId, $goal, $timestamp = null, $value = null, $comment = null)
+    public function editDatapoint($datapointId, $slug, $timestamp = null, $value = null, $comment = null)
     {
         $parameters = array();
         if ($timestamp) $parameters['timestamp'] = $timestamp;
         if ($value)     $parameters['value'] = $value;
         if ($comment)   $parameters['comment'] = $comment;
 
-        return (object)$this->put("users/:username/goals/{$goal}/datapoints/{$datapointId}", $parameters);
+        return (object)$this->put("users/:username/goals/{$slug}/datapoints/{$datapointId}", $parameters);
     }
 
-    public function updateDatapoint($goalName, $datapoint)
+    public function updateDatapoint($slug, $datapoint)
     {
         $parameters = array(
             'timestamp' => $datapoint->timestamp,
@@ -97,7 +97,7 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
             'comment'   => $datapoint->comment
         );
 
-        return (object)$this->put("users/:username/goals/{$goalName}/datapoints/{$datapoint->id}", $parameters);
+        return (object)$this->put("users/:username/goals/{$slug}/datapoints/{$datapoint->id}", $parameters);
     }
 
 
@@ -108,14 +108,14 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     /**
      * Delete a datapoint.
      *
-     * @param string $goal Slug of the goal to delete from.
+     * @param string $slug Slug of the goal to delete from.
      * @param string $datapointId ID of the datapoint to delete.
      *
      * @return stdClass The deleted datapoint object.
      */
-    public function deleteDatapoint($goal, $datapointId)
+    public function deleteDatapoint($slug, $datapointId)
     {
-        return (object)$this->delete("users/:username/goals/{$goal}/datapoints/{$datapointId}");
+        return (object)$this->delete("users/:username/goals/{$slug}/datapoints/{$datapointId}");
     }
 
 }
