@@ -60,7 +60,7 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     /**
      * Add multiple data points.
      */
-    public function createDatapoints($goal, $datapoints, $sendmail = false)
+    public function createDatapoints($slug, $datapoints, $sendmail = false)
     {
 
         // Create parameters
@@ -70,7 +70,7 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
         );
 
         // Send request
-        return self::_objectify($this->post("users/:username/goals/{$goal}/datapoints/create_all", $parameters));
+        return self::_objectify($this->post("users/:username/goals/{$slug}/datapoints/create_all", $parameters));
 
     }
 
