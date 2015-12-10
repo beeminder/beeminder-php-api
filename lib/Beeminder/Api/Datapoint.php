@@ -45,7 +45,6 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
 #    public function createDatapoint($goal, $value, $comment = '', $timestamp = null, $sendmail = false )
     public function createDatapoint($slug, $value, $comment = '')
     {
-
         // Create parameters
         $parameters = array(
             'value'     => $value,
@@ -53,9 +52,15 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
         );
 
         // Send request
-        return (object)$this->post("users/:username/goals/{$slug}/datapoints", $parameters);
-
+        return $this->createDatapointAdvanced( $slug, $parameters );
     }
+
+    public function createDatapointAdvanced($slug, $parameters )
+    {
+        // Send request
+        return (object)$this->post("users/:username/goals/{$slug}/datapoints", $parameters);
+    }
+
 
     /**
      * Add multiple data points.

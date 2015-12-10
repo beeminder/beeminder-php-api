@@ -91,6 +91,29 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
         $newPoint = $api->createDatapoint('goal-1', 123);
     }
 
+    public function testCreateDatapointAdvanced()
+    {
+        $api = $this->getApiMockObject();
+
+        $slug = 'goal-1';
+
+        $parameters = array(
+            'value'                 => 123,
+            'comment'               => '',
+            'timestamp'             => 123456789,
+            'requestid'             => 'unique',
+            'daystamp'              => '20151210',
+            'not_used_by_beeminder' => 'but we will send it anyway',
+        );
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with('users/:username/goals/goal-1/datapoints', $parameters);
+
+        $newPoint = $api->createDatapointAdvanced( $slug, $parameters );
+    }
+
+
 
     public function testCreateDatapoints()
     {
