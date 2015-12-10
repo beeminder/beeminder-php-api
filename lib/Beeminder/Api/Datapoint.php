@@ -55,6 +55,15 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
         return $this->createDatapointAdvanced( $slug, $parameters );
     }
 
+    /**
+     * Create a single datapoint.
+     *
+     * @param string $slug The goal slug to retrieve.
+     * @param array $parameters An Array of parameters to pass to Beeminder.
+     *          You should check the Beeminder API documentation to make sure 
+     *          you are sending valid parameters.
+     * @return object The created datapoint.
+     */
     public function createDatapointAdvanced($slug, $parameters )
     {
         // Send request
