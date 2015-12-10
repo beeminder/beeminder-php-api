@@ -47,17 +47,15 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
         $api = $this->getApiMockObject();
 
         $parameters = array(
-            'timestamp' => 1,
             'value'     => 123,
             'comment'   => 'Test Datapoint 1',
-            'sendmail'  => false,
         );
 
         $api->expects($this->once())
             ->method('post')
             ->with('users/:username/goals/goal-1/datapoints', $parameters);
 
-        $newPoint = $api->createDatapoint('goal-1', 123, 'Test Datapoint 1', 1, false);
+        $newPoint = $api->createDatapoint('goal-1', 123, 'Test Datapoint 1');
     }
 
 
@@ -65,18 +63,16 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
     {
         $api = $this->getApiMockObject();
 
-        $parameters = array(
-            'timestamp' => 1,
-            'value'     => 123.456,
-            'comment'   => 'Test Datapoint 1',
-            'sendmail'  => false,
+        $expected = array(
+            'value'   => 123.456,
+            'comment' => '',
         );
 
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints', $parameters);
+            ->with('users/:username/goals/goal-1/datapoints', $expected);
 
-        $newPoint = $api->createDatapoint('goal-1', 123.456, 'Test Datapoint 1', 1, false);
+        $newPoint = $api->createDatapoint('goal-1', 123.456 );
     }
 
     public function testCreateDatapointWithoutDetails()
@@ -85,9 +81,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
 
         $parameters = array(
             'value'     => 123,
-            'timestamp' => time(),
             'comment'   => '',
-            'sendmail'  => false
         );
 
         $api->expects($this->once())
