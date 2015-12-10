@@ -55,12 +55,28 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
 
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints', $parameters)
-            ->will($this->returnValue($this->_getTestDatapoint()));
+            ->with('users/:username/goals/goal-1/datapoints', $parameters);
 
         $newPoint = $api->createDatapoint('goal-1', 123, 'Test Datapoint 1', 1, false);
+    }
 
-        $this->assertEquals($this->_getTestDatapoint(), $newPoint, "->createDatapoint() returns created item");
+
+    public function testCreateDatapointFloatingPoint()
+    {
+        $api = $this->getApiMockObject();
+
+        $parameters = array(
+            'timestamp' => 1,
+            'value'     => 123.456,
+            'comment'   => 'Test Datapoint 1',
+            'sendmail'  => false,
+        );
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with('users/:username/goals/goal-1/datapoints', $parameters);
+
+        $newPoint = $api->createDatapoint('goal-1', 123.456, 'Test Datapoint 1', 1, false);
     }
 
     public function testCreateDatapointWithoutDetails()
@@ -74,20 +90,13 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
             'sendmail'  => false
         );
 
-        $expectedResult = $this->_getTestDatapoint();
-        $expectedResult->timestamp = $parameters['timestamp'];
-        $expectedResult->comment   = '';
-        $expectedResult->update_at = $parameters['timestamp'];
-
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints', $parameters)
-            ->will($this->returnValue($expectedResult));
+            ->with('users/:username/goals/goal-1/datapoints', $parameters);
 
         $newPoint = $api->createDatapoint('goal-1', 123);
-
-        $this->assertEquals($expectedResult, $newPoint, "->createDatapoint() returns created item");
     }
+
 
     public function testCreateDatapoints()
     {
@@ -104,8 +113,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
 
         $api->expects($this->once())
             ->method('post')
-            ->with('users/:username/goals/goal-1/datapoints/create_all', $parameters)
-            ->will($this->returnValue($this->_getTestDatapoint()));
+            ->with('users/:username/goals/goal-1/datapoints/create_all', $parameters);
 
         $api->createDatapoints('goal-1', $parameters['datapoints'], $parameters['sendmail']);
     }
