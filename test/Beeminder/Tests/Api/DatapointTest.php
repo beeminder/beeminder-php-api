@@ -75,7 +75,7 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
         $newPoint = $api->createDatapoint('goal-1', 123.456 );
     }
 
-    public function testCreateDatapointWithoutDetails()
+    public function testCreateDatapointDefaultComment()
     {
         $api = $this->getApiMockObject();
 
