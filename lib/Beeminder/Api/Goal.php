@@ -140,9 +140,9 @@ class Beeminder_Api_Goal extends Beeminder_Api
         return $this->editGoal( $goal->slug, $parameters );
     }
 
-    public function editGoal($goal, array $options)
+    public function editGoal($slug, array $options)
     {
-        return (object)$this->put("users/:username/goals/{$goal}", $options);
+        return (object)$this->put("users/:username/goals/{$slug}", $options);
     }
 
     // ----------------------------------------------------------------------
