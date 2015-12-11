@@ -8,11 +8,11 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="test/bootstrap.php">
+         bootstrap="bootstrap.php">
 
   <testsuites>
     <testsuite name="beeminder-api - Tests">
-      <directory suffix="Test.php">./test/Beeminder/</directory>
+      <directory suffix="Test.php">./Beeminder/</directory>
     </testsuite>
   </testsuites>
   
