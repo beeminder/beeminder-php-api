@@ -27,7 +27,6 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
     {
         $client = new Beeminder_Client();
         $this->assertRegExp( "/^\d+\.\d+\.\d+/", Beeminder_Client::VERSION );
-        $this->assertRegExp( "/^\d+\.\d+\.\d+/", Beeminder_Client::VERSION1 );
     }
 
 
