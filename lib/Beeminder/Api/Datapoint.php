@@ -44,9 +44,9 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     {
         // Create parameters
         $parameters = array(
+            'timestamp' => ($timestamp == null) ? time() : $timestamp,
             'value'     => (int)$value,
             'comment'   => $comment,
-            'timestamp' => $timestamp,
             'sendmail'  => $sendmail,
         );
 
