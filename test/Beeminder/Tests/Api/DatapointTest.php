@@ -59,6 +59,24 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
     }
 
 
+    public function testCreateDatapointDepricated()
+    {
+        $api = $this->getApiMockObject();
+
+        $parameters = array(
+            'value'     => 123,
+            'comment'   => 'Test Datapoint 1',
+            'timestamp' => 987654321,
+            'sendmail'  => true,
+        );
+
+        $api->expects($this->once())
+            ->method('post')
+            ->with('users/:username/goals/goal-1/datapoints', $parameters);
+
+        $newPoint = $api->createDatapointDepricated('goal-1', 123, 'Test Datapoint 1', 987654321, true);
+    }
+
     public function testCreateDatapointFloatingPoint()
     {
         $api = $this->getApiMockObject();
