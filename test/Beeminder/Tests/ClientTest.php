@@ -22,6 +22,13 @@ class Beeminder_Tests_ClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($driver, $client->getDriver());
     }
 
+    # See: http://semver.org/
+    public function testHasSemVerVersion()
+    {
+        $client = new Beeminder_Client();
+        $this->assertRegExp( "/^\d+\.\d+\.\d+/", Beeminder_Client::VERSION );
+    }
+
 
     // ------------------------------------------------------------
     // -- Authentication Tests
