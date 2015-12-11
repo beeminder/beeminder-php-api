@@ -16,3 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - createDatapointAdvanced() use this if you want to pass other parameters (like timestamp or requestid)
 - Beeminder_Api_Goal->updatableGoalParameters property which you can use to specify which properties of a goal are selected as parameters to updateGoal
 - CHANGELOG.md to better track changes.
+
+### Removed
+- $sendmail parameter to createDatapoints method. (No longer supported by the Beeminder API)
+
