@@ -57,6 +57,16 @@ echo Beeminder_Client::VERSION
 If this gives an error like `PHP Fatal error:  Undefined class constant 'VERSION'`, then you are using an older obsolete release and it's best to download the lastest version.
 
 
+Development
+-----------
+
+beeminder-php-api uses the [PHPUnit](https://phpunit.de/) testing framework and has 100% test coverage.
+
+###Running the tests
+```
+phpunit -c test/phpunit.xml --coverage-text
+```
+
 
 Projects that use this library
 ------------------------------
