@@ -17,7 +17,8 @@ class Beeminder_Api_Goal extends Beeminder_Api
     const FILTER_ALL         = 'all';
     const FILTER_FRONTBURNER = 'frontburner';
     const FILTER_BACKBURNER  = 'backburner';
-    
+
+    public $updatableGoalParameters =  array( 'slug', 'title', 'yaxis', 'panic', 'secret', 'datapublic', 'nomercy', 'roadall', 'lanewidth' );
     
     // ----------------------------------------------------------------------
     // -- Fetching Information
@@ -119,16 +120,19 @@ class Beeminder_Api_Goal extends Beeminder_Api
      */
     public function updateGoal(stdClass $goal)
     {
-        $required = array( 'slug' );
-        $optional = array( 'title', 'panic', 'secret', 'datapublic', 'roadall');
-        foreach( array_merge( $required, $optional ) as $parameter )
-        {
+        $parameters = $this->updatableGoalParameters( $goal );
+        return $this->editGoal( $goal->slug, $parameters );
+    }
+
+    public function updatableGoalParameters(stdClass $goal)
+    {
+        $parameters = array();
+        foreach( $this->updatableGoalParameters as $parameter ) {
             if( property_exists( $goal, $parameter ) ) {
                 $parameters[$parameter] = $goal->$parameter;
             }
         }
-
-        return $this->editGoal( $goal->slug, $parameters );
+        return $parameters;
     }
 
     /*
@@ -152,7 +156,7 @@ class Beeminder_Api_Goal extends Beeminder_Api
     /**
      * Update the yellow brick road for a goal.
      */
-    public function updateRoad($goal, $rate = null, $date = null, $value = null)
+    public function updateRoad($slug, $rate = null, $date = null, $value = null)
     {
         $parameters = array(
             'rate'     => $rate,
@@ -160,7 +164,7 @@ class Beeminder_Api_Goal extends Beeminder_Api
             'goalval'  => $value,
         );
         
-        return (object)$this->post("users/:username/goals/{$goal}/dial_road", $parameters);
+        return (object)$this->post("users/:username/goals/{$slug}/dial_road", $parameters);
         
     }
 

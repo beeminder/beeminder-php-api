@@ -2,6 +2,16 @@
 
 require_once __DIR__ . '/../ApiTestCase.php';
 
+/********
+ * It looks like we're mocking the object under test here:
+ *  $api = $this->getApiMockObject();
+ *
+ * But.. we're only mocking out 4 methods: ('get', 'post', 'delete', 'put')
+ *
+ * TODO: Extract those into a different object and only mock that.
+ *
+ *******/
+
 class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
 {
 
@@ -57,14 +67,26 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
     {
         $api = $this->getApiMockObject();
 
-        $goal = (object) array( 'slug' => 'value', 'anotherkey' => 'anothervalue' );
-        $expected_options = array( 'slug' => 'value' );
+        $goal = (object) array( 'slug' => 'value', 'unexpected' => 'will be filtered out' );
+        $expected = array( 'slug' => 'value' );
+
 
         $api->expects($this->once())
             ->method('put')
-            ->with('users/:username/goals/' . $goal->slug , $expected_options );
+            ->with('users/:username/goals/' . $goal->slug , $expected );
 
         $api->updateGoal( $goal );
+    }
+
+    public function testUpdatableParameters()
+    {
+        $api  = $this->getApiMockObject();
+
+        $goal = (object) array( 'hello' => 'there' );
+        $this->assertEquals( array(), $api->updatableGoalParameters( $goal ) );
+
+        $api->updatableGoalParameters = array('hello');
+        $this->assertEquals( array('hello'=>'there'), $api->updatableGoalParameters( $goal ) );
     }
 
     public function testUpdateGoalWithoutSlug()
@@ -81,6 +103,25 @@ class Beeminder_Tests_Api_GoalTest extends Beeminder_Tests_ApiTestCase
         }
 
     }
+
+    public function testUpdateGoalLanewidth()
+    {
+        $api = $this->getApiMockObject();
+
+        $goal = (object) array( 'slug' => 'value', 'lanewidth' => 12345 );
+
+        $expected_options = array( 
+            'slug' => 'value',
+            'lanewidth' => 12345,
+        );
+
+        $api->expects($this->once())
+            ->method('put')
+            ->with('users/:username/goals/' . $goal->slug , $expected_options );
+
+        $api->updateGoal( $goal );
+    }
+
 
     public function testUpdateGoalRoadAll()
     {
