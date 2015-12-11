@@ -45,6 +45,18 @@ foreach ($goals as $goal) {
 
 ```
 
+Questions
+---------
+
+How do I check which version I have?
+
+```php
+echo Beeminder_Client::VERSION
+```
+
+If this gives an error like `PHP Fatal error:  Undefined class constant 'VERSION'`, then you are using an older obsolete release and it's best to download the lastest version.
+
+
 
 Projects that use this library
 ------------------------------
