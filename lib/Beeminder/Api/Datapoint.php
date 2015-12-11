@@ -39,10 +39,21 @@ class Beeminder_Api_Datapoint extends Beeminder_Api
     // -- Creating Datapoints
     // ----------------------------------------------------------------------
 
+    # 20151210 1009 Old createDatapoint signature
+    public function createDatapointDepricated($slug, $value, $comment = '', $timestamp = null, $sendmail = false )
+    {
+        // Create parameters
+        $parameters = array(
+            'timestamp' => ($timestamp == null) ? time() : $timestamp,
+            'value'     => (int)$value,
+            'comment'   => $comment,
+            'sendmail'  => $sendmail,
+        );
 
+        // Send request
+        return $this->createDatapointAdvanced( $slug, $parameters );
+    }
 
-    # 20151210 1009 Old signature
-#    public function createDatapoint($goal, $value, $comment = '', $timestamp = null, $sendmail = false )
     public function createDatapoint($slug, $value, $comment = '')
     {
         // Create parameters
