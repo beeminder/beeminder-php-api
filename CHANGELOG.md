@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.1.0] - 2015-12-10
 
 ### Changed
+- createDatapoint() renamed to createDatapointDepricated()
 - createDatapoint() now only takes 3 parameters, $slug, $value & $comment (optional)
 
 ### Fixed
