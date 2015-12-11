@@ -143,14 +143,13 @@ class Beeminder_Tests_Api_DatapointTest extends Beeminder_Tests_ApiTestCase
                 'value'     => 123,
                 'comment'   => 'Test Datapoint 1',
             ),
-            'sendmail'  => false,
         );
 
         $api->expects($this->once())
             ->method('post')
             ->with('users/:username/goals/goal-1/datapoints/create_all', $parameters);
 
-        $api->createDatapoints('goal-1', $parameters['datapoints'], $parameters['sendmail']);
+        $api->createDatapoints('goal-1', $parameters['datapoints']);
     }
 
     // ----------------------------------------------------------------------
