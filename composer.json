@@ -1,0 +1,6 @@
+{
+    "name": "beeminder/beeminder-php-api",
+    "description": "PHP interface for the Beeminder.com API",
+    "type": "library",
+    "require": {}
+}
