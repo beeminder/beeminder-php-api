@@ -172,7 +172,6 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
 
                 // Login user oAuth
                 case Beeminder_Client::AUTH_OAUTH_TOKEN:
-                default:
                     $parameters += array(
                         'access_token' => $options['token']
                     );
@@ -180,7 +179,6 @@ abstract class Beeminder_HttpDriver implements Beeminder_DriverInterface
 
                 // Login using private token
                 case Beeminder_Client::AUTH_PRIVATE_TOKEN:
-                default:
                     $parameters += array(
                         'auth_token' => $options['token']
                     );
